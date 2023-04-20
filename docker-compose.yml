@@ -14,7 +14,7 @@ services:
       - ${VITE_PORT:-5173}:${VITE_PORT:-5173}
     working_dir: /var/www/
     volumes:
-      - ./:/var/www
+      - ./version-two/:/var/www
     networks:
       - versiontwo
   db:
@@ -22,7 +22,7 @@ services:
     container_name: versiontwo-db
     restart: unless-stopped
     env_file:
-      - ./version-two/.env
+      - version-two/.env
     ports:
       - "3306:3306"
     environment:

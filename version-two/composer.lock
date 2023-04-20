@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6855f8f0effb85025f0962a7f71153e0",
+    "content-hash": "687f0a6a219055ea129c1341332253cd",
     "packages": [
         {
             "name": "brick/math",
@@ -2195,6 +2195,82 @@
             "time": "2023-02-08T01:06:31+00:00"
         },
         {
+            "name": "openzipkin/zipkin",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/openzipkin/zipkin-php.git",
+                "reference": "d981ecfbe77a3dd430732575474eceb53e38f26a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/openzipkin/zipkin-php/zipball/d981ecfbe77a3dd430732575474eceb53e38f26a",
+                "reference": "d981ecfbe77a3dd430732575474eceb53e38f26a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": "^7.4 || ^8.0",
+                "psr/http-message": "~1.0",
+                "psr/log": "^1.0 || ^2.0 || ^3.0"
+            },
+            "require-dev": {
+                "ext-mysqli": "*",
+                "jcchavezs/httptest": "~0.2",
+                "middlewares/fast-route": "^2.0",
+                "middlewares/request-handler": "^2.0",
+                "nyholm/psr7": "^1.4",
+                "phpspec/prophecy-phpunit": "^2.0",
+                "phpstan/phpstan": "^0.12.26",
+                "phpunit/phpunit": "~9",
+                "psr/http-client": "^1.0",
+                "psr/http-server-middleware": "^1.0",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "suggest": {
+                "ext-mysqli": "Allows to use mysqli instrumentation.",
+                "psr/http-client": "Allows to instrument HTTP clients following PSR18.",
+                "psr/http-server-middleware": "Allows to instrument HTTP servers via middlewares following PSR15."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "./src/Zipkin/Propagation/Id.php",
+                    "./src/Zipkin/Timestamp.php",
+                    "./src/Zipkin/Kind.php",
+                    "./src/Zipkin/Tags.php",
+                    "./src/Zipkin/Annotations.php",
+                    "./src/Zipkin/SpanName.php"
+                ],
+                "psr-4": {
+                    "Zipkin\\": "./src/Zipkin/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "José Carlos Chávez",
+                    "email": "jcchavezs@gmail.com"
+                }
+            ],
+            "description": "A Zipkin instrumentation for PHP",
+            "homepage": "https://github.com/openzipkin/zipkin-php",
+            "keywords": [
+                "distributed-tracing",
+                "openzipkin",
+                "tracing",
+                "zipkin"
+            ],
+            "support": {
+                "issues": "https://github.com/openzipkin/zipkin-php/issues",
+                "source": "https://github.com/openzipkin/zipkin-php/tree/3.0.0"
+            },
+            "time": "2021-11-18T09:03:17+00:00"
+        },
+        {
             "name": "phpoption/phpoption",
             "version": "1.9.1",
             "source": {
@@ -2481,16 +2557,16 @@
         },
         {
             "name": "psr/http-message",
-            "version": "2.0",
+            "version": "1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71"
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/402d35bcb92c70c026d1a6a9883f06b2ead23d71",
-                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
                 "shasum": ""
             },
             "require": {
@@ -2499,7 +2575,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -2514,7 +2590,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
+                    "homepage": "http://www.php-fig.org/"
                 }
             ],
             "description": "Common interface for HTTP messages",
@@ -2528,9 +2604,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/2.0"
+                "source": "https://github.com/php-fig/http-message/tree/1.1"
             },
-            "time": "2023-04-04T09:54:51+00:00"
+            "time": "2023-04-04T09:50:52+00:00"
         },
         {
             "name": "psr/log",
@@ -5181,6 +5257,88 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.6"
             },
             "time": "2023-01-03T09:29:04+00:00"
+        },
+        {
+            "name": "vinelab/tracing-laravel",
+            "version": "v2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Vinelab/tracing-laravel.git",
+                "reference": "c602ed58fa41ffbe357283516e0c417d24747f03"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Vinelab/tracing-laravel/zipball/c602ed58fa41ffbe357283516e0c417d24747f03",
+                "reference": "c602ed58fa41ffbe357283516e0c417d24747f03",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/bus": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/console": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/container": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/contracts": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/http": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/log": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/queue": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/routing": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
+                "openzipkin/zipkin": "~2.0.2|~3.0",
+                "php": "^7.1.3|^8.0.0|^8.1.0",
+                "psr/http-message": "~1.0",
+                "ramsey/uuid": "~3.0|~4.0"
+            },
+            "require-dev": {
+                "google/cloud-pubsub": "^1.18",
+                "guzzlehttp/psr7": "~1.0|~2.0",
+                "lucid-arch/laravel-foundation": "^7.0|^8.0",
+                "lucidarch/lucid": "^1.0",
+                "mockery/mockery": "~1.0",
+                "php-amqplib/php-amqplib": "~2.8|~3.0",
+                "phpunit/phpunit": "~7.0|~8.0|~9.0",
+                "vinelab/http": "~1.5"
+            },
+            "suggest": {
+                "lucid-arch/laravel-foundation": "Base package for the legacy Lucid Architecture that we also support tracing for",
+                "lucidarch/lucid": "Latest distribution package for the Lucid Architecture that we also support tracing for",
+                "php-amqplib/php-amqplib": "A pure PHP implementation of the AMQP protocol",
+                "vinelab/http": "Fault-tolerant HTTP client for sending and receiving JSON and XML that we also support tracing for"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Vinelab\\Tracing\\TracingServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Vinelab\\Tracing\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Diachenko",
+                    "email": "adiach3nko@gmail.com"
+                }
+            ],
+            "description": "Distributed tracing for Laravel made easy",
+            "keywords": [
+                "jaeger",
+                "laravel",
+                "lucid",
+                "tracing",
+                "zipkin"
+            ],
+            "support": {
+                "issues": "https://github.com/Vinelab/tracing-laravel/issues",
+                "source": "https://github.com/Vinelab/tracing-laravel/tree/v2.2.0"
+            },
+            "time": "2022-06-17T09:11:48+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
