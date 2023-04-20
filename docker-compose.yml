@@ -17,6 +17,23 @@ services:
       - ./version-two/:/var/www
     networks:
       - versiontwo
+    
+  orders:
+    build:
+      args:
+        user: admin
+        uid: 1000
+      context: ./orders
+      dockerfile: Dockerfile
+    image: orders
+    container_name: orders
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./orders/:/var/www
+    networks:
+      - versiontwo
+
   db:
     image: mysql:8.0
     container_name: versiontwo-db
@@ -33,7 +50,7 @@ services:
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
-      - ./version-two/docker-compose/mysql:/docker-entrypoint-initdb.d
+      - ./mysql:/docker-entrypoint-initdb.d
       - ../versiontwo_mysql_data:/var/lib/mysql
     networks:
       - versiontwo
@@ -44,8 +61,9 @@ services:
     ports:
       - 8000:80
     volumes:
-      - ./version-two/:/var/www
-      - ./version-two/docker-compose/nginx:/etc/nginx/conf.d/
+      - ./:/var/www
+      - ../errors/:/var/log/nginx/
+      - ./nginx:/etc/nginx/conf.d/
     networks:
       - versiontwo
     depends_on:
