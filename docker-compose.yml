@@ -1,0 +1,57 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: admin
+        uid: 1000
+      context: ./version-two
+      dockerfile: Dockerfile
+    image: versiontwo
+    container_name: versiontwo-app
+    restart: unless-stopped
+    ports:
+      - ${VITE_PORT:-5173}:${VITE_PORT:-5173}
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - versiontwo
+  db:
+    image: mysql:8.0
+    container_name: versiontwo-db
+    restart: unless-stopped
+    env_file:
+      - ./version-two/.env
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./version-two/docker-compose/mysql:/docker-entrypoint-initdb.d
+      - ../versiontwo_mysql_data:/var/lib/mysql
+    networks:
+      - versiontwo
+  nginx:
+    image: nginx
+    container_name: versiontwo-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./version-two/:/var/www
+      - ./version-two/docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - versiontwo
+    depends_on:
+      - app
+networks:
+  versiontwo:
+    driver: bridge
+volumes:
+  mysql_data:
