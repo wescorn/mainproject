@@ -25,4 +25,9 @@ $app = require __DIR__.'/../bootstrap/app.php';
 |
 */
 
+$tracer = app(Vinelab\Tracing\Contracts\Tracer::class);
+
+optional($tracer->getRootSpan())->finish();
+$tracer->flush();
+
 $app->run();

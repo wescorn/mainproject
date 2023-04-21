@@ -23,6 +23,12 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
+$app->register(Vinelab\Tracing\TracingServiceProvider::class);
+
+$app->middleware([
+    Vinelab\Tracing\Middleware\TraceRequests::class,
+]);
+
 // $app->withFacades();
 
 // $app->withEloquent();
