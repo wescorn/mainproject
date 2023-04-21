@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 services:
   versiontwo:
     build:
@@ -17,7 +17,12 @@ services:
       - ./version-two/:/var/www
     networks:
       - mainnetwork
-    
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/:/etc/prometheus/
   orders:
     build:
       args:

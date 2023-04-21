@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use Prometheus\CollectorRegistry;
+use Prometheus\Storage\InMemory;
+use Prometheus\RenderTextFormat;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,3 +17,18 @@ use App\Http\Controllers\HomeController;
 */
 
 Route::get('/', [HomeController::class, 'show']);
+
+
+
+Route::get('/metrics', function () {
+    $registry = new CollectorRegistry(new InMemory());
+
+    // Register a counter metric for the number of requests
+    $counter = $registry->registerCounter('myapp', 'requests_total', 'The total number of requests');
+
+    $counter->inc();
+
+    $renderer = new RenderTextFormat();
+
+    return $renderer->render($registry->getMetricFamilySamples());
+});
