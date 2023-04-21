@@ -18,3 +18,4 @@ yarn-error.log
 /.vscode
 /version-two/vendor
 /version-two/node_modules
+nginx/*/logs

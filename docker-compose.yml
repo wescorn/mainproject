@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-  app:
+  versiontwo:
     build:
       args:
         user: admin
@@ -10,13 +10,11 @@ services:
     image: versiontwo
     container_name: versiontwo-app
     restart: unless-stopped
-    ports:
-      - ${VITE_PORT:-5173}:${VITE_PORT:-5173}
     working_dir: /var/www/
     volumes:
       - ./version-two/:/var/www
     networks:
-      - versiontwo
+      - mainnetwork
     
   orders:
     build:
@@ -26,15 +24,15 @@ services:
       context: ./orders
       dockerfile: Dockerfile
     image: orders
-    container_name: orders
+    container_name: orders-app
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
       - ./orders/:/var/www
     networks:
-      - versiontwo
+      - mainnetwork
 
-  db:
+  versiontwo-db:
     image: mysql:8.0
     container_name: versiontwo-db
     restart: unless-stopped
@@ -53,23 +51,57 @@ services:
       - ./mysql:/docker-entrypoint-initdb.d
       - ../versiontwo_mysql_data:/var/lib/mysql
     networks:
-      - versiontwo
-  nginx:
+      - mainnetwork
+  orders-db:
+    image: mysql:8.0
+    container_name: orders-db
+    restart: unless-stopped
+    env_file:
+      - orders/.env
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+      - ../orders_mysql_data:/var/lib/mysql
+    networks:
+      - mainnetwork
+  versiontwo-nginx:
     image: nginx
     container_name: versiontwo-nginx
     restart: unless-stopped
     ports:
       - 8000:80
     volumes:
-      - ./:/var/www
-      - ../errors/:/var/log/nginx/
-      - ./nginx:/etc/nginx/conf.d/
+      - ./version-two/:/var/www
+      - ./nginx/versiontwo/logs/:/var/log/nginx/
+      - ./nginx/versiontwo/conf.d/:/etc/nginx/conf.d/
     networks:
-      - versiontwo
+      - mainnetwork
     depends_on:
-      - app
+      - versiontwo
+  orders-nginx:
+    image: nginx
+    container_name: orders-nginx
+    restart: unless-stopped
+    ports:
+      - 7000:80
+    volumes:
+      - ./orders/:/var/www
+      - ./nginx/orders/logs/:/var/log/nginx/
+      - ./nginx/orders/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - mainnetwork
+    depends_on:
+      - orders
 networks:
-  versiontwo:
+  mainnetwork:
     driver: bridge
 volumes:
   mysql_data:
