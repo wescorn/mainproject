@@ -8,6 +8,8 @@ services:
       context: ./version-two
       dockerfile: Dockerfile
     image: versiontwo
+    ports:
+      - 9000:9000
     container_name: versiontwo-app
     restart: unless-stopped
     working_dir: /var/www/
@@ -24,6 +26,8 @@ services:
       context: ./orders
       dockerfile: Dockerfile
     image: orders
+    ports:
+      - 9100:9100
     container_name: orders-app
     restart: unless-stopped
     working_dir: /var/www/
