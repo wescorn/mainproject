@@ -43,14 +43,10 @@ services:
 
   zipkin:
     image: openzipkin/zipkin
-    container_name: zipkin
-    restart: unless-stopped
     ports:
       - "9411:9411"
     volumes:
       - ../zipkin-data:/zipkin
-    networks:
-      - mainnetwork
 
   versiontwo-db:
     image: mysql:8.0
