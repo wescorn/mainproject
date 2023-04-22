@@ -10,6 +10,10 @@ services:
     image: versiontwo
     ports:
       - 9000:9000
+    depends_on:
+      - zipkin
+    environment:
+      - ZIPKIN_BASE_URL=http://localhost:9411
     container_name: versiontwo-app
     restart: unless-stopped
     working_dir: /var/www/
@@ -45,8 +49,6 @@ services:
     image: openzipkin/zipkin
     ports:
       - "9411:9411"
-    volumes:
-      - ../zipkin-data:/zipkin
 
   versiontwo-db:
     image: mysql:8.0
