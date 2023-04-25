@@ -64,7 +64,12 @@ services:
       - mainnetwork
     depends_on:
       - versiontwo
-  
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+    - "15673:15672"
+    networks:
+      - mainnetwork
   zipkin:
     image: openzipkin/zipkin
     ports:
