@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 use Prometheus\CollectorRegistry;
 use Prometheus\Storage\InMemory;
 use Prometheus\RenderTextFormat;
@@ -18,17 +19,4 @@ use Prometheus\RenderTextFormat;
 
 Route::get('/', [HomeController::class, 'show']);
 
-
-
-Route::get('/metrics', function () {
-    $registry = new CollectorRegistry(new InMemory());
-
-    // Register a counter metric for the number of requests
-    $counter = $registry->registerCounter('myapp', 'requests_total', 'The total number of requests');
-
-    $counter->inc();
-
-    $renderer = new RenderTextFormat();
-
-    return $renderer->render($registry->getMetricFamilySamples());
-});
+Route::get('/orders/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');

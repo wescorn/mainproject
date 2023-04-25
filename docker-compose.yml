@@ -13,7 +13,7 @@ services:
     depends_on:
       - zipkin
     environment:
-      - ZIPKIN_BASE_URL=http://localhost:9411
+      - ZIPKIN_BASE_URL=http://zipkin:9411
     container_name: versiontwo-app
     restart: unless-stopped
     working_dir: /var/www/
@@ -21,73 +21,32 @@ services:
       - ./version-two/:/var/www
     networks:
       - mainnetwork
-  prometheus:
-    image: prom/prometheus
+  redis:
+    image: redis
     ports:
-      - "9090:9090"
+      - "6379:6379"
     volumes:
-      - ./prometheus/:/etc/prometheus/
-  orders:
-    build:
-      args:
-        user: admin
-        uid: 1000
-      context: ./orders
-      dockerfile: Dockerfile
-    image: orders
-    ports:
-      - 9100:9100
-    container_name: orders-app
-    restart: unless-stopped
-    working_dir: /var/www/
-    volumes:
-      - ./orders/:/var/www
+      - ./redis/redis-data:/data
     networks:
       - mainnetwork
-
-  zipkin:
-    image: openzipkin/zipkin
-    ports:
-      - "9411:9411"
-
   versiontwo-db:
     image: mysql:8.0
     container_name: versiontwo-db
     restart: unless-stopped
     env_file:
-      - version-two/.env
+      - ./version-two/.env
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_DATABASE: versiontwo
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_USER: admin
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d
       - ../versiontwo_mysql_data:/var/lib/mysql
-    networks:
-      - mainnetwork
-  orders-db:
-    image: mysql:8.0
-    container_name: orders-db
-    restart: unless-stopped
-    env_file:
-      - orders/.env
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
-    volumes:
-      - ./mysql:/docker-entrypoint-initdb.d
-      - ../orders_mysql_data:/var/lib/mysql
     networks:
       - mainnetwork
   versiontwo-nginx:
@@ -104,22 +63,88 @@ services:
       - mainnetwork
     depends_on:
       - versiontwo
-  orders-nginx:
-    image: nginx
-    container_name: orders-nginx
-    restart: unless-stopped
+  
+  zipkin:
+    image: openzipkin/zipkin
     ports:
-      - 7000:80
-    volumes:
-      - ./orders/:/var/www
-      - ./nginx/orders/logs/:/var/log/nginx/
-      - ./nginx/orders/conf.d/:/etc/nginx/conf.d/
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mysql
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=zipkin
+      - MYSQL_PASS=zipkin
+      - MYSQL_PASSWORD=zipkin
+    depends_on:
+      - zipkin_storage
     networks:
       - mainnetwork
+  zipkin_storage:
+    image: openzipkin/zipkin-mysql
+    container_name: mysql
+    ports:
+      - 3306:3306
+# For some reason, the container breaks if i map the data to the host machine, so not sure how i'm supposted to persist the data...
+#    volumes:
+#    - ../zipkin_mysql_data/data:/mysql/data
+    networks:
+      - mainnetwork
+    restart: unless-stopped
+    privileged: true
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - 9090:9090
     depends_on:
-      - orders
+      - zipkin_storage
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ../prometheus-data:/prometheus
+    networks:
+      - mainnetwork
+  # Dunno wtf this is for (can probably delete), but for more details, see https://github.com/openzipkin/docker-zipkin-dependencies
+  dependencies:
+    image: openzipkin/zipkin-dependencies
+    container_name: dependencies
+    entrypoint: crond -f
+    environment:
+      - STORAGE_TYPE=mysql
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=zipkin
+      - MYSQL_PASS=zipkin
+    depends_on:
+      - zipkin_storage
+    networks:
+      - mainnetwork
+
+  
+  #GRAFANA is like a visualisation thing that can show graphs and shit based on some data source like Zipkin or Prometheus.    
+  #grafana:
+  #  image: grafana/grafana
+  #  container_name: grafana
+  #  ports:
+  #    - 3000:3000
+  #  depends_on:
+  #    - prometheus
+  #  environment:
+  #    - GF_AUTH_ANONYMOUS_ENABLED=true
+  #    - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+  #  networks:
+  #    - mainnetwork
+  #setup_grafana_datasource:
+  #  image: appropriate/curl
+  #  container_name: setup_grafana_datasource
+  #  depends_on:
+  #    - grafana
+  #  volumes:
+  #    - ./prometheus/create-datasource-and-dashboard.sh:/create.sh:ro
+  #  command: /create.sh
+  #  networks:
+  #    - mainnetwork
 networks:
   mainnetwork:
     driver: bridge
 volumes:
   mysql_data:
+  redis-data:
+  zipkin_mysql_data:

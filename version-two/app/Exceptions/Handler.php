@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use Auth;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Vinelab\Tracing\Facades\Trace;
 
 class Handler extends ExceptionHandler
 {
@@ -46,5 +48,17 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+    * Get the default context variables for logging.
+    *
+    * @return array
+    */
+    protected function context()
+    {
+        return array_filter([
+            'uuid' => Trace::getUUID(),
+        ]);
     }
 }

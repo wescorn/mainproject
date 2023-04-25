@@ -186,7 +186,9 @@ return [
          * Package Service Providers...
          */
          Vinelab\Tracing\TracingServiceProvider::class,
-
+         \Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider::class,
+         \Arquivei\LaravelPrometheusExporter\GuzzleServiceProvider::class,
+         \Arquivei\LaravelPrometheusExporter\DatabaseServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -210,8 +212,9 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'Tracing' => Vinelab\Tracing\Facades\Trace::class
+        'Tracing' => Vinelab\Tracing\Facades\Trace::class,
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'Prometheus' => Arquivei\LaravelPrometheusExporter\PrometheusFacade::class,
     ])->toArray(),
 
 ];
