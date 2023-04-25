@@ -103,7 +103,20 @@ services:
       - '--storage.tsdb.path=/prometheus'
     networks:
       - mainnetwork
-  
+  jenkins:
+    build:
+      context: ./jenkins
+      dockerfile: Dockerfile
+    user: root
+    container_name: jenkins
+    ports:
+      - 9999:8080
+      - 50000:50000
+    volumes:
+      - ./jenkins/auto-setup:/usr/share/jenkins/ref/init.groovy.d/
+      - ../jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    #command: bash -c "sleep 5 && ./usr/share/jenkins/ref/init.groovy.d/create-jobs.sh"
   #GRAFANA is like a visualisation thing that can show graphs and shit based on some data source like Zipkin or Prometheus.    
   grafana:
     image: grafana/grafana
@@ -134,3 +147,4 @@ networks:
 volumes:
   mysql_data:
   redis-data:
+  jenkins_home:
