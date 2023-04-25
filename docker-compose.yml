@@ -21,6 +21,18 @@ services:
       - ./version-two/:/var/www
     networks:
       - mainnetwork
+  Orders:
+    build:
+      context: ./Orders
+      dockerfile: Dockerfile
+    image: orders
+    ports: 9100:9100
+    depends_on:
+      - rabbitmq
+    container_name: orders-app
+    restart: unless-stopped
+    networks:
+      - mainnetwork
   #redis is needed for prometheus to work. It's some kind of storage thing.
   redis:
     image: redis

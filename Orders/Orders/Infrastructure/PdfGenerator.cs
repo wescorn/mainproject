@@ -25,6 +25,8 @@ namespace Orders.Infrastructure
                 document.Close();
 
                 byte[] pdfBytes = ms.ToArray();
+
+                messagePublisher.PublishOrder(pdfBytes, "PublishOrder");
             }
         }
     }
