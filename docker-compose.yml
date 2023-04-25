@@ -69,54 +69,36 @@ services:
     ports:
       - "9411:9411"
     environment:
-      - STORAGE_TYPE=mysql
-      - MYSQL_HOST=mysql
-      - MYSQL_USER=zipkin
-      - MYSQL_PASS=zipkin
-      - MYSQL_PASSWORD=zipkin
+      - "STORAGE_TYPE=cassandra3"
+      - "CASSANDRA_CONTACT_POINTS=cassandra:9042"
+      - "CASSANDRA_KEYSPACE=zipkin"
+      - "CASSANDRA_LOCAL_DC=datacenter1"
     depends_on:
-      - zipkin_storage
+      - cassandra
     networks:
       - mainnetwork
-  zipkin_storage:
-    image: openzipkin/zipkin-mysql
-    container_name: mysql
+  # cassandra is what zipkin uses as storage.
+  cassandra:
+    image: cassandra:3
     ports:
-      - 3306:3306
-# For some reason, the container breaks if i map the data to the host machine, so not sure how i'm supposted to persist the data...
-#    volumes:
-#    - ../zipkin_mysql_data/data:/mysql/data
+      - "9042:9042"
+    volumes:
+      - ../cassandra_data:/var/lib/cassandra/data
+    environment:
+      - "MAX_HEAP_SIZE=512M"
+      - "HEAP_NEWSIZE=100M"
     networks:
       - mainnetwork
-    restart: unless-stopped
-    privileged: true
   prometheus:
     image: prom/prometheus
     container_name: prometheus
     ports:
       - 9090:9090
-    depends_on:
-      - zipkin_storage
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - ../prometheus-data:/prometheus
     networks:
       - mainnetwork
-  # Dunno wtf this is for (can probably delete), but for more details, see https://github.com/openzipkin/docker-zipkin-dependencies
-  dependencies:
-    image: openzipkin/zipkin-dependencies
-    container_name: dependencies
-    entrypoint: crond -f
-    environment:
-      - STORAGE_TYPE=mysql
-      - MYSQL_HOST=mysql
-      - MYSQL_USER=zipkin
-      - MYSQL_PASS=zipkin
-    depends_on:
-      - zipkin_storage
-    networks:
-      - mainnetwork
-
   
   #GRAFANA is like a visualisation thing that can show graphs and shit based on some data source like Zipkin or Prometheus.    
   #grafana:
