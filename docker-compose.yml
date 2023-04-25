@@ -21,6 +21,7 @@ services:
       - ./version-two/:/var/www
     networks:
       - mainnetwork
+  #redis is needed for prometheus to work. It's some kind of storage thing.
   redis:
     image: redis
     ports:
@@ -95,38 +96,41 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ../prometheus-data:/prometheus
+      - ../prometheus:/prometheus
+      - ./prometheus/:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
     networks:
       - mainnetwork
   
   #GRAFANA is like a visualisation thing that can show graphs and shit based on some data source like Zipkin or Prometheus.    
-  #grafana:
-  #  image: grafana/grafana
-  #  container_name: grafana
-  #  ports:
-  #    - 3000:3000
-  #  depends_on:
-  #    - prometheus
-  #  environment:
-  #    - GF_AUTH_ANONYMOUS_ENABLED=true
-  #    - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-  #  networks:
-  #    - mainnetwork
-  #setup_grafana_datasource:
-  #  image: appropriate/curl
-  #  container_name: setup_grafana_datasource
-  #  depends_on:
-  #    - grafana
-  #  volumes:
-  #    - ./prometheus/create-datasource-and-dashboard.sh:/create.sh:ro
-  #  command: /create.sh
-  #  networks:
-  #    - mainnetwork
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3100:3000
+    depends_on:
+      - prometheus
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    networks:
+      - mainnetwork
+  #Don't worry about this one, it just makes a Dashboard for Grafana, and then dies. It is not supposed to be running.
+  setup_grafana_datasource:
+    image: appropriate/curl
+    container_name: setup_grafana_datasource
+    depends_on:
+      - grafana
+    volumes:
+      - ./grafana/create-datasource-and-dashboard.sh:/create.sh:ro
+    command: /create.sh
+    networks:
+      - mainnetwork
 networks:
   mainnetwork:
     driver: bridge
 volumes:
   mysql_data:
   redis-data:
-  zipkin_mysql_data:

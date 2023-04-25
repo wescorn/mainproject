@@ -15,6 +15,7 @@
         "vinelab/tracing-laravel": "2.2.0"
     },
     "require-dev": {
+        "beyondcode/laravel-dump-server": "^1.9",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
@@ -36,7 +37,10 @@
             "Database\\Seeders\\": "database/seeders/",
             "App\\Helpers\\":"app/Helpers/",
             "Prometheus\\Storage\\": "vendor/promphp/prometheus_client_php/src/Prometheus/Storage/"
-        }
+        },
+        "files": [
+            "app/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

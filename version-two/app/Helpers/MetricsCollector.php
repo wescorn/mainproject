@@ -7,9 +7,10 @@ use Arquivei\LaravelPrometheusExporter\PrometheusExporter;
 
 class MetricsCollector implements CollectorInterface
 {
+    private $defaultRegistry;
     public function __construct()
     {
-
+        
     }
 
     public function getName(): string
@@ -36,11 +37,11 @@ class MetricsCollector implements CollectorInterface
 
     protected function getGauge(string $name): \Prometheus\Gauge
     {
-        return \Prometheus\CollectorRegistry::getDefault()->getOrRegisterGauge($this->getName(), $name, 'The duration something took in seconds.', ['controller', 'action']);
+        return $this->defaultRegistry->getOrRegisterGauge($this->getName(), $name, 'The duration something took in seconds.', ['controller', 'action']);
     }
 
     protected function getHistogram(string $name): \Prometheus\Histogram
     {
-        return \Prometheus\CollectorRegistry::getDefault()->getOrRegisterHistogram($this->getName(), $name, 'The duration of HTTP requests in seconds.', ['route'], [0.1, 0.5, 1, 2, 5]);
+        return $this->defaultRegistry->getOrRegisterHistogram($this->getName(), $name, 'The duration of HTTP requests in seconds.', ['route'], [0.1, 0.5, 1, 2, 5]);
     }
 }
