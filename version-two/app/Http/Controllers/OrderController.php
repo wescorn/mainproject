@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Bschmitt\Amqp\Amqp;
 use App\Prometheus\MetricsCollector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -49,12 +50,29 @@ class OrderController extends Controller
     }
 
     public function printOrder(Request $request) {
-        $id = $request->input('id');
+        $connection = "host=rabbitmq";
 
+        $id = $request->input('id');
+        
+        $amqp = new Amqp();
+
+        $amqp->consume('your_queue_name', function ($message, $resolver) {
+            // process received message
+            $resolver->acknowledge($message);
+            // return response
+            return response()->json(['message' => $message->body]);
+        });
+    
+        // send message
+        $amqp->publish('your_exchange_name', 'your_routing_key', ['message' => 'hello world']);
+    
+        // wait for message
+        //$amqp->consume('your_queue_name');
+        /*
         return response('JEP')
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'attachment; filename="order.pdf"');
-
+*/
     }
 
     public function pdf() {

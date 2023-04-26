@@ -27,5 +27,18 @@ namespace Orders.Data
         {
             return db.Orders.Include(o => o.OrderLines).ToList();
         }
+
+        public void Edit(Order entity)
+        {
+            db.Entry(entity).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
+        public void Remove(int id)
+        {
+            var order = db.Orders.FirstOrDefault(p => p.Id == id);
+            db.Orders.Remove(order);
+            db.SaveChanges();
+        }
     }
 }

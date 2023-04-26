@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -189,6 +191,7 @@ return [
          \Arquivei\LaravelPrometheusExporter\PrometheusServiceProvider::class,
          \Arquivei\LaravelPrometheusExporter\GuzzleServiceProvider::class,
          \Arquivei\LaravelPrometheusExporter\DatabaseServiceProvider::class,
+         \Bschmitt\Amqp\AmqpServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -215,6 +218,7 @@ return [
         'Tracing' => Vinelab\Tracing\Facades\Trace::class,
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Prometheus' => Arquivei\LaravelPrometheusExporter\PrometheusFacade::class,
+        'Amqp' => Bschmitt\Amqp\Facades\Amqp::class,
     ])->toArray(),
 
 ];
