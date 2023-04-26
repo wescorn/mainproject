@@ -43,7 +43,7 @@ namespace Orders.Controllers
                 return NotFound();
             }
 
-            PdfGenerator pdfGenerator = new PdfGenerator(messagePublisher);
+            PdfGenerator pdfGenerator = new PdfGenerator();
             pdfGenerator.Generate(item);
 
             return Ok();
@@ -63,7 +63,7 @@ namespace Orders.Controllers
         {
             int id = 2;
             Order order = all_orders.Find(o => o.Id == id) ?? all_orders.First();
-            PdfGenerator pdfGenerator = new PdfGenerator(messagePublisher);
+            PdfGenerator pdfGenerator = new PdfGenerator();
             pdfGenerator.Generate(order);
             return Json(all_orders);
         }

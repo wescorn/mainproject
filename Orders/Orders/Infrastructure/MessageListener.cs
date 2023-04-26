@@ -41,8 +41,8 @@ namespace Orders.Infrastructure
 
                 var order = orderRepos.Get(message.Id);
 
-                //PdfGenerator pdfGenerator = new PdfGenerator();
-                //pdfGenerator.Generate(order);
+                PdfGenerator pdfGenerator = new PdfGenerator();
+                pdfGenerator.Generate(order);
             }
         }
     }

@@ -8,17 +8,16 @@ namespace Orders.Infrastructure
 {
     public class PdfGenerator
     {
+        /*
         IMessagePublisher messagePublisher;
 
         public PdfGenerator(IMessagePublisher messagePublisher)
         {
             this.messagePublisher = messagePublisher;
         }
-
+        */
         public void Generate(Order order)
         {
-            
-
             // Create a new PDF document
             PdfDocument pdf = new PdfDocument(new PdfWriter("/orders/pdfs/order_"+order.Id+".pdf"));
             Document document = new Document(pdf);
@@ -35,8 +34,6 @@ namespace Orders.Infrastructure
 
             // Save the PDF file to disk
             pdf.Close();
-
-            messagePublisher.PublishOrder(order.Id, "PublishOrder");
         }
     }
 }
