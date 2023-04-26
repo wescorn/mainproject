@@ -2,6 +2,7 @@
 using Orders.Data;
 using Orders.Models;
 using RabbitMQ.Client;
+using System.Diagnostics;
 
 namespace Orders.Infrastructure
 {

@@ -56,15 +56,20 @@ class OrderController extends Controller
         
         $amqp = new Amqp();
 
-        $amqp->consume('your_queue_name', function ($message, $resolver) {
+        dump("pp");
+
+        /*
+        $amqp->consume('Orders.Models.GetOrderMessage, Orders_GIVE ME PDFS', function ($message, $resolver) {
+            dump($message->body());
             // process received message
             $resolver->acknowledge($message);
             // return response
             return response()->json(['message' => $message->body]);
         });
-    
+        */
+        
         // send message
-        $amqp->publish('your_exchange_name', 'your_routing_key', ['message' => 'hello world']);
+        $amqp->publish('generate', "JUST WORK PENIS");
     
         // wait for message
         //$amqp->consume('your_queue_name');
