@@ -48,6 +48,10 @@ class OrderController extends Controller
         return view("welcome", ['orders' => $orders]);
     }
 
+    public function printOrder($id) {
+        dump($id);
+    }
+
     public function pdf() {
 
         //Well, nested spans seem to work. Good luck figuring out how to propagate the traceid to the Orders service, through RabbitMQ.

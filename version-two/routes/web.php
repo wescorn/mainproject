@@ -22,4 +22,5 @@ use Prometheus\RenderTextFormat;
 Route::get('/orders/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');
 //TODO Make function to print pdf
 Route::get('/', [OrderController::class, 'getOrders'])->name('orders.getOrders');
+Route::post('/print', [OrderController::class, 'printOrder'])->name('orders.printOrder');
 Route::get('/orders/test', [OrderController::class, 'test'])->name('orders.test');

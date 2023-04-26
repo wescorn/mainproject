@@ -24,6 +24,9 @@
     </head>
     <body class="antialiased">
         <!--<button class="btn btn-success"><a href="{{ route('orders.pdf') }}">Get Orders</a></button>-->
+        <form>
+
+        </form>
         <table>
             <tr>
                 <th>Order Number</th>
@@ -32,8 +35,13 @@
             @foreach($orders as $order)
             <tr>
                 <td>{{ $order->id }}</td>
-                <td><button class="btn btn-primary"><a href="{{ route('orders.getOrders') }}">Print Pdf</a></button></td>
-            </tr>
+                <td>
+                <form method="POST" action="{{ route('orders.printOrder', ['id' => $order->id]) }}">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $order->id }}">   
+                    <button type="submit" class="btn btn-primary"><a href="{{ route('orders.printOrder', ['id' => $order->id]) }}">Print Pdf</a></button></td>
+                </form>
+                </tr>
             @endforeach
         </table>
 
