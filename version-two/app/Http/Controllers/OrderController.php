@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Prometheus\MetricsCollector;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Promethus\Storage\Redis;
 use Vinelab\Tracing\Facades\Trace;
 use \Prometheus\Counter;
+use Illuminate\Support\Facades\View;
+
 use App\Models\Order;
 use App\Models\OrderLine;
 class OrderController extends Controller
@@ -16,6 +19,40 @@ class OrderController extends Controller
        
     }
 
+    public function getOrders(){
+
+        $response = Http::get("http://orders/Order");
+
+        $orders = [];
+
+        foreach (collect(json_decode($response->body()))->toArray() as $order) {
+            dump($order);
+            $mOrder = new Order(["id" => $order["id"]]);
+
+            $lines = [];
+
+            foreach ($order["OrderLines"] as $line) {
+                $mLine = new OrderLine([
+                    "id" => $line["id"],
+                    "order_id" => $line["OrderId"],
+                    "product_id" => $line["ProductId"],
+                    "quantity" => $line["Quantity"]
+                ]);
+            
+                array_push($lines, $mLine);
+            }
+
+            $mOrder->orderLines = $lines;
+
+            array_push($orders, $mOrder);
+        }
+        
+        //dd($orders->body());
+
+        //dump($orders->body());
+
+        return view("welcome", ['orders' => $orders]);
+    }
 
     public function pdf() {
 

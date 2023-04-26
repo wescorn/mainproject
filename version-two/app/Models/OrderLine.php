@@ -15,10 +15,10 @@ class OrderLine extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'Id',
-        'OrderId',
-        'ProductId',
-        'Ouantity',
+        'id',
+        'order_id',
+        'product_id',
+        'quantity',
     ];
 
     public function order(){
