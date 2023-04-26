@@ -1,7 +1,8 @@
-﻿using iTextSharp.text;
-using iTextSharp.text.pdf;
-using Orders.Models;
+﻿using Orders.Models;
 using System.CodeDom.Compiler;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 
 namespace Orders.Infrastructure
 {
@@ -16,18 +17,26 @@ namespace Orders.Infrastructure
 
         public void Generate(Order order)
         {
-            using (MemoryStream ms = new MemoryStream())
+            
+
+            // Create a new PDF document
+            PdfDocument pdf = new PdfDocument(new PdfWriter("/orders/pdfs/order_"+order.Id+".pdf"));
+            Document document = new Document(pdf);
+
+            // Add some content to the PDF
+            Paragraph heading = new Paragraph("Order ID: "+ (order.Id));
+            document.Add(heading);
+
+            foreach (OrderLine orderline in order.OrderLines)
             {
-                Document document = new Document();
-                PdfWriter write = PdfWriter.GetInstance(document, ms);
-                document.Open();
-                // insert data into document
-                document.Close();
-
-                byte[] pdfBytes = ms.ToArray();
-
-                messagePublisher.PublishOrder(pdfBytes, "PublishOrder");
+                Paragraph p = new Paragraph("Product: " + orderline.ProductId + "\t"+"Quantity: "+orderline.Quantity);
+                document.Add(p);
             }
+
+            // Save the PDF file to disk
+            pdf.Close();
+
+            messagePublisher.PublishOrder(order.Id, "PublishOrder");
         }
     }
 }

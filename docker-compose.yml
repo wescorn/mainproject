@@ -21,15 +21,22 @@ services:
       - ./version-two/:/var/www
     networks:
       - mainnetwork
-  Orders:
+  orders:
+    image: orders
+    container_name: orders-app
     build:
       context: ./Orders
-      dockerfile: Dockerfile
-    image: orders
-    ports: 9100:9100
+      dockerfile: Orders/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports: 
+      - 9100:80
     depends_on:
       - rabbitmq
-    container_name: orders-app
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ../pdfs:/orders/pdfs
     restart: unless-stopped
     networks:
       - mainnetwork

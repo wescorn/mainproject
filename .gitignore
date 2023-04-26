@@ -19,5 +19,6 @@ yarn-error.log
 /version-two/vendor
 /version-two/node_modules
 nginx/*/logs
-.vs/
-obj/
+**/.vs
+**/obj
+**/bin
