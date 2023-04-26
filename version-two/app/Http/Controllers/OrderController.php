@@ -9,7 +9,7 @@ use Promethus\Storage\Redis;
 use Vinelab\Tracing\Facades\Trace;
 use \Prometheus\Counter;
 use Illuminate\Support\Facades\View;
-
+use Illuminate\Support\Arr;
 use App\Models\Order;
 use App\Models\OrderLine;
 class OrderController extends Controller
@@ -24,26 +24,20 @@ class OrderController extends Controller
         $response = Http::get("http://orders/Order");
 
         $orders = [];
-
-        foreach (collect(json_decode($response->body()))->toArray() as $order) {
-            dump($order);
-            $mOrder = new Order(["id" => $order["id"]]);
-
+        foreach (json_decode($response->body()) as $order) {
+            $mOrder = new Order(["id" => Arr::get($order, 'id', 1)]);
             $lines = [];
-
-            foreach ($order["OrderLines"] as $line) {
+            foreach (Arr::get($order, 'orderLines', [1]) as $index => $line) {
                 $mLine = new OrderLine([
-                    "id" => $line["id"],
-                    "order_id" => $line["OrderId"],
-                    "product_id" => $line["ProductId"],
-                    "quantity" => $line["Quantity"]
+                    "id" => Arr::get($line, 'id', $index),
+                    "order_id" => Arr::get($order, 'id', 1),
+                    "product_id" => Arr::get($line, 'product_id', $index ?: 1),
+                    "quantity" => Arr::get($line, 'quantity', $index ?: 1)
                 ]);
             
                 array_push($lines, $mLine);
             }
-
             $mOrder->orderLines = $lines;
-
             array_push($orders, $mOrder);
         }
         
