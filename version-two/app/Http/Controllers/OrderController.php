@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Promethus\Storage\Redis;
 use Vinelab\Tracing\Facades\Trace;
 use \Prometheus\Counter;
-
+use App\Models\Order;
+use App\Models\OrderLine;
 class OrderController extends Controller
 {
     public function __construct()
@@ -51,4 +52,15 @@ class OrderController extends Controller
 
         return "PDF ENDPOINT HERE!";
     }
+
+    public function test() {
+
+        $orders = Order::factory()->count(5)->make()->each(function (Order $order) {
+            $orderLines = OrderLine::factory()->count(3)->make();
+            $order->setRelation('order_lines', $orderLines);
+        });
+
+        return $orders;
+    }
+
 }

@@ -20,3 +20,4 @@ use Prometheus\RenderTextFormat;
 Route::get('/', [HomeController::class, 'show']);
 
 Route::get('/orders/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');
+Route::get('/orders/test', [OrderController::class, 'test'])->name('orders.test');
