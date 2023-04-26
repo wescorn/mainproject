@@ -48,8 +48,13 @@ class OrderController extends Controller
         return view("welcome", ['orders' => $orders]);
     }
 
-    public function printOrder($id) {
-        dump($id);
+    public function printOrder(Request $request) {
+        $id = $request->input('id');
+
+        return response('JEP')
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="order.pdf"');
+
     }
 
     public function pdf() {

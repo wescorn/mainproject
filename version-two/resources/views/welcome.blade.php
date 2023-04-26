@@ -36,10 +36,10 @@
             <tr>
                 <td>{{ $order->id }}</td>
                 <td>
-                <form method="POST" action="{{ route('orders.printOrder', ['id' => $order->id]) }}">
+                <form method="POST" action="{{ route('orders.printOrder') }}">
                     @csrf
                     <input type="hidden" name="id" value="{{ $order->id }}">   
-                    <button type="submit" class="btn btn-primary"><a href="{{ route('orders.printOrder', ['id' => $order->id]) }}">Print Pdf</a></button></td>
+                    <button type="submit" class="btn btn-primary">Print Pdf</button></td>
                 </form>
                 </tr>
             @endforeach
