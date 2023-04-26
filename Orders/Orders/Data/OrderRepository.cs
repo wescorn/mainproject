@@ -25,7 +25,7 @@ namespace Orders.Data
 
         public IEnumerable<Order> GetAll()
         {
-            return db.Orders.ToList();
+            return db.Orders.Include(o => o.OrderLines).ToList();
         }
     }
 }
