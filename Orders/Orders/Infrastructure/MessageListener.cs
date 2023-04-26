@@ -22,7 +22,7 @@ namespace Orders.Infrastructure
         {
             using (bus = RabbitHutch.CreateBus(connectionString))
             {
-                bus.PubSub.Subscribe<GetOrderMessage>("GIVE ME PDFS", HandleOrderPdfs);
+                bus.PubSub.Subscribe<GetOrderMessage>("GIVE ME PDFS", HandleOrderPdfs, x => x.WithTopic("generate"));
 
                 // Block the thread so that it will not exit and stop subscribing.
                 lock (this)

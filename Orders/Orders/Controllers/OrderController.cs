@@ -30,7 +30,12 @@ namespace Orders.Controllers
             };
         }
 
-
+        //GET Order
+        [HttpGet]
+        public IEnumerable<Order> GetOrders()
+        {
+            return repository.GetAll();
+        }
 
         // GET order/5
         [HttpGet("{id}", Name = "GetOrder")]
@@ -67,10 +72,5 @@ namespace Orders.Controllers
             pdfGenerator.Generate(order);
             return Json(all_orders);
         }
-
-        public IEnumerable<Order> GetOrders()
-        {
-            return repository.GetAll();
-        }    
     }
 }
