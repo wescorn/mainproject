@@ -45,7 +45,7 @@ return [
             'queue_nowait'          => false,
             'queue_properties'      => ['x-ha-policy' => ['S', 'all']],
 
-            'consumer_tag'          => '',
+            'consumer_tag'          => 'big pp',
             'consumer_no_local'     => false,
             'consumer_no_ack'       => false,
             'consumer_exclusive'    => false,

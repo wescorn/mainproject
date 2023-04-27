@@ -56,20 +56,25 @@ class OrderController extends Controller
         
         $amqp = new Amqp();
 
-        dump("pp");
 
-        /*
+
+        
         $amqp->consume('Orders.Models.GetOrderMessage, Orders_GIVE ME PDFS', function ($message, $resolver) {
-            dump($message->body());
+            
             // process received message
             $resolver->acknowledge($message);
             // return response
             return response()->json(['message' => $message->body]);
         });
-        */
         
+
+        $headers = ['application_headers' => new \PhpAmqpLib\Wire\AMQPTable([
+            'typeName' => 'Orders.Models.GetOrderMessage',
+            'type_name' => 'Orders.Models.GetOrderMessage'
+        ])];
+        $message = new \Bschmitt\Amqp\Message("1", ['content_type' => 'text/plain', 'delivery_mode' => 2, 'application_headers' => $headers]);
         // send message
-        $amqp->publish('generate', "JUST WORK PENIS");
+        $amqp->publish('generate', $message);
     
         // wait for message
         //$amqp->consume('your_queue_name');

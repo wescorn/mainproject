@@ -20,6 +20,10 @@ namespace Orders.Data
                 new Order {
                     OrderLines = new List<OrderLine>{
                         new OrderLine { ProductId = 1, Quantity = 2 } }
+                },
+                new Order {
+                    OrderLines = new List<OrderLine>{
+                        new OrderLine { ProductId = 2, Quantity = 3 } }
                 }
             };
 
