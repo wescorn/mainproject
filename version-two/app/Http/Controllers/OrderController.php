@@ -50,37 +50,48 @@ class OrderController extends Controller
     }
 
     public function printOrder(Request $request) {
-        $connection = "host=rabbitmq";
+        $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection(
+            config('amqp.properties.production.host'),
+            config('amqp.properties.production.port'),
+            config('amqp.properties.production.username'),
+            config('amqp.properties.production.password'),
+            config('amqp.properties.production.vhost'),
+        );
+        $channel = $connection->channel();
 
-        $id = $request->input('id');
-        
-        $amqp = new Amqp();
+        // define the exchange name and type
+        $exchangeName = 'OrderExchange';
+        $exchangeType = 'topic';
+        // define the queue name
+        $queueName = 'OrderPrintQueue';
+        // define the routing key
+        $routingKey = 'generate';
+        // define the message headers
+        $headers = new \PhpAmqpLib\Wire\AMQPTable([
+            'Type' => 'Orders.Models.GetOrderMessage'
+        ]);
+        $msg_data = [
+            'id' => $request->input('id')
+        ];
+        // create a new message object
+        $message = new \PhpAmqpLib\Message\AMQPMessage(json_encode($msg_data), array(
+            'application_headers' => $headers,
+            'content_type' => 'application/json',
+            'delivery_mode' => 2,
+        ));
+        // declare the exchange with the specific type
+        $channel->exchange_declare($exchangeName, $exchangeType, false, true, false);
+        // declare the queue
+        $channel->queue_declare($queueName, false, true, false, false);
+        // bind the queue to the exchange with the routing key
+        $channel->queue_bind($queueName, $exchangeName, $routingKey);
+        // publish the message to the exchange
+        $channel->basic_publish($message, $exchangeName, $routingKey);
+        // close the channel and the connection
+        $channel->close();
+        $connection->close();
 
 
-        $amqp->consume('request.queue', function ($message, $resolver) {
-            dump($message->body());
-            // process received message
-            $resolver->acknowledge($message);
-            // return response
-            return response()->json(['message' => $message->body]);
-        });
-        
-
-        $headers = ['application_headers' => new \PhpAmqpLib\Wire\AMQPTable([
-            'typeName' => 'Orders.Models.GetOrderMessage',
-            'type_name' => 'Orders.Models.GetOrderMessage'
-        ])];
-        $message = new \Bschmitt\Amqp\Message("1", ['content_type' => 'text/plain', 'delivery_mode' => 2, 'application_headers' => $headers]);
-        // send message
-        $amqp->publish('directexchange_key', json_encode($id));
-    
-        // wait for message
-        //$amqp->consume('your_queue_name');
-        /*
-        return response('JEP')
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="order.pdf"');
-*/
     }
 
     public function pdf() {

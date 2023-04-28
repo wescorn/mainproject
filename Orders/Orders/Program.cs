@@ -45,20 +45,9 @@ using (var scope = app.Services.CreateScope())
     dbInitializer.Initialize(dbContext);
 }
 
-ConnectionFactory connectionFactory = new ConnectionFactory
-{
-    HostName = "guest",
-    UserName = "guest",
-    Password = "rabbitmq",
-};
 
-var connection = connectionFactory.CreateConnection();
-var channel = connection.CreateModel(); 
-channel.BasicQos(0, 1, false);
-Task.Factory.StartNew(() => {
-    var listener = new MessageListener(app.Services, cloudAMQPConnectionString, channel);
-    channel.BasicConsume("request.queue", false, listener);
-});
+// Create a message listener in a separate thread.
+Task.Factory.StartNew(() => new MessageListener(app.Services, cloudAMQPConnectionString).Start());
 //MessageListener listener = new MessageListener(app.Services, cloudAMQPConnectionString, channel);
 //channel.BasicConsume("request.queue", false, listener);
 
