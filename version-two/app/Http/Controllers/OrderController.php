@@ -6,6 +6,7 @@ use Bschmitt\Amqp\Amqp;
 use App\Prometheus\MetricsCollector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use PhpAmqpLib\Message\AMQPMessage;
 use Promethus\Storage\Redis;
 use Vinelab\Tracing\Facades\Trace;
 use \Prometheus\Counter;
@@ -50,11 +51,71 @@ class OrderController extends Controller
     }
 
     public function printOrder(Request $request) {
-        $connection = "host=rabbitmq";
+        
 
         $id = $request->input('id');
         
-        $amqp = new Amqp();
+        $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection(
+            config('amqp.properties.production.host'),
+            config('amqp.properties.production.port'),
+            config('amqp.properties.production.username'),
+            config('amqp.properties.production.password'),
+            config('amqp.properties.production.vhost'),
+        );
+        $channel = $connection->channel();
+
+        // define the exchange name and type
+        $exchangeName = 'Orders.Models.GetOrderMessage, Orders';
+        $exchangeType = 'topic';
+        // define the queue name
+        $queueName = 'Orders.Models.GetOrderMessage, Orders_GIVE ME PDFS';
+        // define the routing key
+        $routingKey = 'generate';
+        // define the message headers
+        $headers = new \PhpAmqpLib\Wire\AMQPTable([
+            'Type' => 'Orders.Models.GetOrderMessage'
+        ]);
+        $msg_data = [
+            'id' => 1
+        ];
+        // create a new message object
+        $message = new \PhpAmqpLib\Message\AMQPMessage(json_encode($msg_data), array(
+            'application_headers' => $headers,
+            'content_type' => 'application/json',
+            'delivery_mode' => 2,
+            'app_id' => config('app.name', 'versiontwo'),
+            'user_id' => 'guest',
+            'type' => 'Orders.Models.GetOrderMessage',
+            'Type' => 'Orders.Models.GetOrderMessage',
+            'message' => 'Orders.Models.GetOrderMessage',
+            'messageType' => 'Orders.Models.GetOrderMessage',
+            'MessageType' => 'Orders.Models.GetOrderMessage',
+            'message_type' => 'Orders.Models.GetOrderMessage',
+        ));
+        // declare the exchange with the specific type
+        $channel->exchange_declare($exchangeName, $exchangeType, false, true, false);
+        // declare the queue
+        $channel->queue_declare($queueName, false, true, false, false);
+        // bind the queue to the exchange with the routing key
+        $channel->queue_bind($queueName, $exchangeName, $routingKey);
+        // publish the message to the exchange
+        $channel->basic_publish($message, $exchangeName, $routingKey);
+        // close the channel and the connection
+        $channel->close();
+        $connection->close();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -66,14 +127,13 @@ class OrderController extends Controller
             // return response
             return response()->json(['message' => $message->body]);
         });
-        
 
-        $headers = ['application_headers' => new \PhpAmqpLib\Wire\AMQPTable([
+        $message = new AMQPMessage(json_encode(['id' => '1']));
+        $headers = new \PhpAmqpLib\Wire\AMQPTable([
             'typeName' => 'Orders.Models.GetOrderMessage',
             'type_name' => 'Orders.Models.GetOrderMessage'
-        ])];
-        $message = new \Bschmitt\Amqp\Message("1", ['content_type' => 'text/plain', 'delivery_mode' => 2, 'application_headers' => $headers]);
-        // send message
+        ]);
+        $message->set('application_headers', $headers);
         $amqp->publish('generate', $message);
     
         // wait for message

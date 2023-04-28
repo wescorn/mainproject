@@ -89,6 +89,9 @@ services:
     - "15673:15672"
     networks:
       - mainnetwork
+    volumes:
+      - ./rabbitmq/conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbitmq/logs:/var/log/rabbitmq/
   zipkin:
     image: openzipkin/zipkin
     ports:

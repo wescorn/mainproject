@@ -6,7 +6,7 @@ using Orders.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 //RabbitMQ
-string cloudAMQPConnectionString = "host=rabbitmq";
+string cloudAMQPConnectionString = "host=rabbitmq;username=guest;password=guest";
 
 // Add services to the container.
 
