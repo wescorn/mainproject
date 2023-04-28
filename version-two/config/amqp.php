@@ -27,8 +27,8 @@ return [
             'connect_options'       => [],
             'ssl_options'           => [],
 
-            'exchange'              => 'Orders.Models.GetOrderMessage, Orders',
-            'exchange_type'         => 'topic',
+            'exchange'              => 'request.exchange',
+            'exchange_type'         => 'direct',
             'exchange_passive'      => false,
             'exchange_durable'      => true,
             'exchange_auto_delete'  => false,

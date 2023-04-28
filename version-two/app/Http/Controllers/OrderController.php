@@ -57,10 +57,8 @@ class OrderController extends Controller
         $amqp = new Amqp();
 
 
-
-        
-        $amqp->consume('Orders.Models.GetOrderMessage, Orders_GIVE ME PDFS', function ($message, $resolver) {
-            
+        $amqp->consume('request.queue', function ($message, $resolver) {
+            dump($message->body());
             // process received message
             $resolver->acknowledge($message);
             // return response
@@ -74,7 +72,7 @@ class OrderController extends Controller
         ])];
         $message = new \Bschmitt\Amqp\Message("1", ['content_type' => 'text/plain', 'delivery_mode' => 2, 'application_headers' => $headers]);
         // send message
-        $amqp->publish('generate', $message);
+        $amqp->publish('directexchange_key', json_encode($id));
     
         // wait for message
         //$amqp->consume('your_queue_name');
