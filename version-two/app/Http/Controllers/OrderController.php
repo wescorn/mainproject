@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Arr;
 use App\Models\Order;
 use App\Models\OrderLine;
+use Vinelab\Tracing\Propagation\Formats;
+
 class OrderController extends Controller
 {
     public function __construct()
@@ -50,48 +52,53 @@ class OrderController extends Controller
     }
 
     public function printOrder(Request $request) {
-        $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection(
-            config('amqp.properties.production.host'),
-            config('amqp.properties.production.port'),
-            config('amqp.properties.production.username'),
-            config('amqp.properties.production.password'),
-            config('amqp.properties.production.vhost'),
-        );
-        $channel = $connection->channel();
+        startSpan('Start Generting a PDF', function($span) use($request){
 
-        // define the exchange name and type
-        $exchangeName = 'OrderExchange';
-        $exchangeType = 'topic';
-        // define the queue name
-        $queueName = 'OrderPrintQueue';
-        // define the routing key
-        $routingKey = 'generate';
-        // define the message headers
-        $headers = new \PhpAmqpLib\Wire\AMQPTable([
-            'Type' => 'Orders.Models.GetOrderMessage'
-        ]);
-        $msg_data = [
-            'id' => $request->input('id')
-        ];
-        // create a new message object
-        $message = new \PhpAmqpLib\Message\AMQPMessage(json_encode($msg_data), array(
-            'application_headers' => $headers,
-            'content_type' => 'application/json',
-            'delivery_mode' => 2,
-        ));
-        // declare the exchange with the specific type
-        $channel->exchange_declare($exchangeName, $exchangeType, false, true, false);
-        // declare the queue
-        $channel->queue_declare($queueName, false, true, false, false);
-        // bind the queue to the exchange with the routing key
-        $channel->queue_bind($queueName, $exchangeName, $routingKey);
-        // publish the message to the exchange
-        $channel->basic_publish($message, $exchangeName, $routingKey);
-        // close the channel and the connection
-        $channel->close();
-        $connection->close();
+            $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection(
+                config('amqp.properties.production.host'),
+                config('amqp.properties.production.port'),
+                config('amqp.properties.production.username'),
+                config('amqp.properties.production.password'),
+                config('amqp.properties.production.vhost'),
+            );
+            $channel = $connection->channel();
+    
+            // define the exchange name and type
+            $exchangeName = 'OrderExchange';
+            $exchangeType = 'topic';
+            // define the queue name
+            $queueName = 'OrderPrintQueue';
+            // define the routing key
+            $routingKey = 'generate';
+            // define the message headers
+            $headers = new \PhpAmqpLib\Wire\AMQPTable([
+                'Type' => 'Orders.Models.GetOrderMessage'
+            ]);
 
+            $msg_data = [
+                'id' => $request->input('id')
+            ];
+            // create a new message object
+            $message = new \PhpAmqpLib\Message\AMQPMessage(json_encode($msg_data), array(
+                'application_headers' => $headers,
+                'content_type' => 'application/json',
+                'delivery_mode' => 2,
+            ));
 
+            $message = Trace::inject($message, Formats::AMQP);
+
+            // declare the exchange with the specific type
+            $channel->exchange_declare($exchangeName, $exchangeType, false, true, false);
+            // declare the queue
+            $channel->queue_declare($queueName, false, true, false, false);
+            // bind the queue to the exchange with the routing key
+            $channel->queue_bind($queueName, $exchangeName, $routingKey);
+            // publish the message to the exchange
+            $channel->basic_publish($message, $exchangeName, $routingKey);
+            // close the channel and the connection
+            $channel->close();
+            $connection->close();
+        });
     }
 
     public function pdf() {

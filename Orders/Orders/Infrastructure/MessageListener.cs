@@ -51,6 +51,9 @@ namespace Orders.Infrastructure
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {
+                    var traceId = ea.BasicProperties.Headers["x-b3-traceid"];
+                    Console.WriteLine("Trace ID: ", traceId.ToString);
+
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     var json = JsonConvert.DeserializeObject<GetOrderMessage>(message);
