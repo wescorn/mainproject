@@ -1,12 +1,12 @@
 pipeline {
     agent any
-    trigger {
+    triggers {
         pollSOM("* * * * *")
     }
     stages {
         stage("Build") {
             steps {
-                
+
             }
         }
     }
