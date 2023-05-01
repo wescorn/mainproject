@@ -128,6 +128,7 @@ services:
     networks:
       - mainnetwork
   jenkins:
+    image: jenkins/jenkins:lts
     build:
       context: ./jenkins
       dockerfile: Dockerfile
@@ -155,19 +156,19 @@ services:
     networks:
       - mainnetwork
   #Don't worry about this one, it just makes a Dashboard for Grafana, and then dies. It is not supposed to be running.
-  setup_grafana_datasource:
-    image: appropriate/curl
-    container_name: setup_grafana_datasource
-    depends_on:
-      - grafana
-    volumes:
-      - ./grafana/create-datasource-and-dashboard.sh:/create.sh:ro
-    command: /create.sh
-    networks:
-      - mainnetwork
+  #setup_grafana_datasource:
+  #  image: appropriate/curl
+  #  container_name: setup_grafana_datasource
+  #  depends_on:
+  #    - grafana
+  #  volumes:
+  #    - ./grafana/create-datasource-and-dashboard.sh:/create.sh:ro
+  #  command: /create.sh
+  #  networks:
+  #    - mainnetwork
 networks:
   mainnetwork:
-    driver: bridge
+    driver: overlay
 volumes:
   mysql_data:
   redis-data:
