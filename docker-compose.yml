@@ -128,7 +128,7 @@ services:
     networks:
       - mainnetwork
   jenkins:
-    image: ${DOCKERHUB_NAME}/jenkins/jenkins:lts
+    image: jenkins/jenkins:lts
     build:
       context: ./jenkins
       dockerfile: Dockerfile
