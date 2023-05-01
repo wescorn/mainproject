@@ -15,8 +15,6 @@ RUN dpkg -i packages-microsoft-prod.deb
 RUN rm packages-microsoft-prod.deb
 RUN apt-get update && apt-get install -y dotnet-sdk-7.0
 
-
-
 # Configure Jenkins settings
 COPY ./jenkins.yaml /var/jenkins_home/casc_configs/jenkins.yaml
 
