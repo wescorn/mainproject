@@ -4,9 +4,22 @@ pipeline {
         pollSCM("* * * * *")
     }
     stages {
-        stage("Build") {
+        stage("build") {
             steps {
-                sh "docker compose build"
+                echo 'Building application'
+                sh 'composer install'
+                sh 'cp .env.example .env'
+                sh 'php artisan key:generate'
+            }
+        }
+        stage("test") {
+            steps {
+                echo 'testing application'
+            }
+        }
+        stage("deliver") {
+            steps {
+                echo 'delivering application'
             }
         }
     }
