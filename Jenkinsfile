@@ -6,7 +6,12 @@ pipeline {
     stages {
         stage("Build") {
             steps {
-                echo "YAY we are running"
+                sh "docker compose build"
+            }
+        }
+        stage("Deliver") {
+            steps {
+                sh "docker compose up -d"
             }
         }
     }
