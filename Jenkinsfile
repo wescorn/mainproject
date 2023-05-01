@@ -20,7 +20,10 @@ pipeline {
         }
         stage("deliver") {
             steps {
-                echo 'delivering application'
+                withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'docker login -u $USERNAME -p $PASSWORD'
+                    sh "docker compose push"
+                }
             }
         }
     }
