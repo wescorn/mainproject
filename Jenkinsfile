@@ -7,18 +7,19 @@ pipeline {
         stage("Build") {
             steps {
                 sh "docker compose build"
-                sh "docker compose up"
             }
         }
-        /*
         stage("Deliver") {
             steps {
+                echo "Delivery Working"
+                
+                /*
                 withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh 'docker login -u $USERNAME -p $PASSWORD'
                     sh "docker compose push"
                 }
+                */
             }
         }
-        */
     }
 }
