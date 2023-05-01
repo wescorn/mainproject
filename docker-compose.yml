@@ -7,7 +7,7 @@ services:
         uid: 1000
       context: ./version-two
       dockerfile: Dockerfile
-    image: versiontwo
+    image: ${DOCKERHUB_NAME}/versiontwo
     ports:
       - 9000:9000
     depends_on:
@@ -22,7 +22,7 @@ services:
     networks:
       - mainnetwork
   orders:
-    image: orders
+    image: ${DOCKERHUB_NAME}/orders
     container_name: orders-app
     build:
       context: ./Orders
@@ -168,7 +168,7 @@ services:
   #    - mainnetwork
 networks:
   mainnetwork:
-    driver: overlay
+    driver: bridge
 volumes:
   mysql_data:
   redis-data:
