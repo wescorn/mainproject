@@ -7,7 +7,7 @@ services:
         uid: 1000
       context: ./version-two
       dockerfile: Dockerfile
-    image: ${DOCKERHUB_NAME}/versiontwo${BUILD_NUMBER}
+    image: ${DOCKERHUB_NAME}/versiontwo:${BUILD_NUMBER}
     ports:
       - 9000:9000
     depends_on:
@@ -22,7 +22,7 @@ services:
     networks:
       - mainnetwork
   orders:
-    image: ${DOCKERHUB_NAME}/orders${BUILD_NUMBER}
+    image: ${DOCKERHUB_NAME}/orders:${BUILD_NUMBER}
     container_name: orders-app
     build:
       context: ./Orders
