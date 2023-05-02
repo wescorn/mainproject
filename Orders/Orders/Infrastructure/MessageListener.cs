@@ -10,10 +10,9 @@ using OpenTelemetry.Context.Propagation;
 
 namespace Orders.Infrastructure
 {
-    public class MessageListener : DefaultBasicConsumer
+    public class MessageListener
     {
         IServiceProvider provider;
-        private readonly IModel _channel;
 
 
         public MessageListener(IServiceProvider provider)
@@ -42,6 +41,8 @@ namespace Orders.Infrastructure
                      arguments: null
                 );
 
+                channel.BasicQos(0, 1, false);
+
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {
@@ -59,11 +60,12 @@ namespace Orders.Infrastructure
                             var json = JsonConvert.DeserializeObject<GetOrderMessage>(message);
                             HandleOrderPdfs(json);
                         }
-
                     }
+
+                    channel.BasicAck(ea.DeliveryTag, false);
                 };
                 channel.BasicConsume(queue: "OrderPrintQueue",
-                                     autoAck: true,
+                                     autoAck: false,
                                      consumer: consumer);
                 channel.QueueBind(queue: "OrderPrintQueue",
                 exchange: "OrderExchange",
@@ -78,21 +80,6 @@ namespace Orders.Infrastructure
             
         }
 
-        public override void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, ReadOnlyMemory<byte> body)
-        {
-            using (var scope = provider.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var orderRepos = services.GetService<IRepository<Order>>();
-
-                var order = orderRepos.Get(int.Parse(Encoding.UTF8.GetString(body.ToArray())));
-
-                PdfGenerator pdfGenerator = new PdfGenerator();
-                pdfGenerator.Generate(order);
-                _channel.BasicAck(deliveryTag, false);
-            }
-        }
-
         private void HandleOrderPdfs(GetOrderMessage message)
         {
             using (var scope = provider.CreateScope())
@@ -104,7 +91,6 @@ namespace Orders.Infrastructure
 
                 PdfGenerator pdfGenerator = new PdfGenerator();
                 pdfGenerator.Generate(order);
-                //_channel.BasicAck()
             }
         }
     }
