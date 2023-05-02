@@ -1,20 +1,12 @@
 ﻿using EasyNetQ;
 using Newtonsoft.Json;
-using OpenTracing;
-using OpenTracing.Util;
-using OpenTracing.Mock;
-using OpenTracing.Noop;
-using OpenTracing.Propagation;
-using OpenTracing.Tag;
 using Orders.Data;
 using Orders.Models;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Diagnostics;
 using System.Text;
-using zipkin4net;
-using zipkin4net.Tracers.Zipkin;
-using zipkin4net.Transport.Http;
+using OpenTelemetry.Context.Propagation;
 
 namespace Orders.Infrastructure
 {
@@ -22,17 +14,11 @@ namespace Orders.Infrastructure
     {
         IServiceProvider provider;
         private readonly IModel _channel;
-        string connectionString;
-        IBus bus;
-        OpenTracing.ITracer tracer;
 
-        public MessageListener(IServiceProvider provider, string connectionString)
+
+        public MessageListener(IServiceProvider provider)
         {
             this.provider = provider;
-            this.connectionString = connectionString;
-            // Set up the tracer
-            var tracer = GlobalTracer.Instance;
-
         }
 
 
@@ -48,7 +34,7 @@ namespace Orders.Infrastructure
             using ( var connection = connectionFactory.CreateConnection())
             using ( var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare("OrderExchange", ExchangeType.Topic, durable:true);
+                channel.ExchangeDeclare("OrderExchange", ExchangeType.Topic, durable: true);
                 channel.QueueDeclare(queue: "OrderPrintQueue",
                      durable: true,
                      exclusive: false,
@@ -59,30 +45,22 @@ namespace Orders.Infrastructure
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {
-                    var traceIdBytes = (byte[]) ea.BasicProperties.Headers["x-b3-traceid"];
-                    var spanIdBytes = (byte[])ea.BasicProperties.Headers["x-b3-spanid"];
-                    var traceId = Encoding.UTF8.GetString(traceIdBytes);
-                    var spanId = Encoding.UTF8.GetString(spanIdBytes);
 
-                    //var extractedContext = tracer.Extract(BuiltinFormats.HttpHeaders, ea.BasicProperties.Headers);
+                    //OpenTelemetry.Context.Propagation.TextMapPropagator Propagator = new TraceContextPropagator();
+                    Console.WriteLine("Received message:");
 
-                    /*
-                    tracer.BuildSpan("Pdf Generation");
-                    var span = tracer.ActiveSpan;
+                    string traceId = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["x-b3-traceid"]);
+                    string spanId = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["x-b3-spanid"]);
+                    var parentContext = new ActivityContext(ActivityTraceId.CreateFromString(traceId), ActivitySpanId.CreateFromString(spanId), ActivityTraceFlags.Recorded, "", true);
+                    using (var activity1 = Monitoring.ActivitySource.StartActivity("Received PDF Gen request in C# (MachineName: "+System.Environment.MachineName+")", ActivityKind.Consumer, parentContext)) {
+                        using (var activity2 = Monitoring.ActivitySource.StartActivity("Generating PDF!", ActivityKind.Consumer)) {
+                            var body = ea.Body.ToArray();
+                            var message = Encoding.UTF8.GetString(body);
+                            var json = JsonConvert.DeserializeObject<GetOrderMessage>(message);
+                            HandleOrderPdfs(json);
+                        }
 
-
-                    IScope scope = tracer.ScopeManager.Active;
-                    if (scope != null)
-                    {
-                        scope.Span.Log("...");
                     }
-                    */
-
-                    var body = ea.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
-                    var json = JsonConvert.DeserializeObject<GetOrderMessage>(message);
-                    Console.WriteLine("Received message: {0}", json.Id);
-                    HandleOrderPdfs(json);
                 };
                 channel.BasicConsume(queue: "OrderPrintQueue",
                                      autoAck: true,

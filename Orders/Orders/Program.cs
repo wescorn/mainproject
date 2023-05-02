@@ -47,7 +47,7 @@ using (var scope = app.Services.CreateScope())
 
 
 // Create a message listener in a separate thread.
-Task.Factory.StartNew(() => new MessageListener(app.Services, cloudAMQPConnectionString).Start());
+Task.Factory.StartNew(() => new MessageListener(app.Services).Start());
 //MessageListener listener = new MessageListener(app.Services, cloudAMQPConnectionString, channel);
 //channel.BasicConsume("request.queue", false, listener);
 

@@ -90,10 +90,10 @@ return [
     */
 
     'zipkin' => [
-        'host' => env('ZIPKIN_HOST', 'localhost'),
+        'host' => env('ZIPKIN_HOST', 'zipkin'),
         'port' => env('ZIPKIN_PORT', 9411),
         'options' => [
-            '128bit' => false,
+            '128bit' => true,
             'max_tag_len' => 1048576,
             'request_timeout' => 5,
         ],

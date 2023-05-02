@@ -52,56 +52,57 @@ class OrderController extends Controller
     }
 
     public function printOrder(Request $request) {
-        startSpan('Start Generting a PDF', function($span) use($request){
+        startSpan('Endpoint to initiate Generating a PDF', function($span) use($request){
+            $this->pdf(function($span1) use($request) {
 
-            $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection(
-                config('amqp.properties.production.host'),
-                config('amqp.properties.production.port'),
-                config('amqp.properties.production.username'),
-                config('amqp.properties.production.password'),
-                config('amqp.properties.production.vhost'),
-            );
-            $channel = $connection->channel();
-    
-            // define the exchange name and type
-            $exchangeName = 'OrderExchange';
-            $exchangeType = 'topic';
-            // define the queue name
-            $queueName = 'OrderPrintQueue';
-            // define the routing key
-            $routingKey = 'generate';
-            // define the message headers
-            $headers = new \PhpAmqpLib\Wire\AMQPTable([
-                'Type' => 'Orders.Models.GetOrderMessage'
-            ]);
+                $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection(
+                    config('amqp.properties.production.host'),
+                    config('amqp.properties.production.port'),
+                    config('amqp.properties.production.username'),
+                    config('amqp.properties.production.password'),
+                    config('amqp.properties.production.vhost'),
+                );
+                $channel = $connection->channel();
+            
+                // define the exchange name and type
+                $exchangeName = 'OrderExchange';
+                $exchangeType = 'topic';
+                // define the queue name
+                $queueName = 'OrderPrintQueue';
+                // define the routing key
+                $routingKey = 'generate';
+                // define the message headers
+                $headers = new \PhpAmqpLib\Wire\AMQPTable([
+                    'Type' => 'Orders.Models.GetOrderMessage'
+                ]);
 
-            $msg_data = [
-                'id' => $request->input('id')
-            ];
-            // create a new message object
-            $message = new \PhpAmqpLib\Message\AMQPMessage(json_encode($msg_data), array(
-                'application_headers' => $headers,
-                'content_type' => 'application/json',
-                'delivery_mode' => 2,
-            ));
+                $msg_data = [
+                    'id' => $request->input('id')
+                ];
+                // create a new message object
+                $message = new \PhpAmqpLib\Message\AMQPMessage(json_encode($msg_data), array(
+                    'application_headers' => $headers,
+                    'content_type' => 'application/json',
+                    'delivery_mode' => 2,
+                ));
 
-            $message = Trace::inject($message, Formats::AMQP);
-
-            // declare the exchange with the specific type
-            $channel->exchange_declare($exchangeName, $exchangeType, false, true, false);
-            // declare the queue
-            $channel->queue_declare($queueName, false, true, false, false);
-            // bind the queue to the exchange with the routing key
-            $channel->queue_bind($queueName, $exchangeName, $routingKey);
-            // publish the message to the exchange
-            $channel->basic_publish($message, $exchangeName, $routingKey);
-            // close the channel and the connection
-            $channel->close();
-            $connection->close();
+                $message = Trace::inject($message, Formats::AMQP);
+                // declare the exchange with the specific type
+                $channel->exchange_declare($exchangeName, $exchangeType, false, true, false);
+                // declare the queue
+                $channel->queue_declare($queueName, false, true, false, false);
+                // bind the queue to the exchange with the routing key
+                $channel->queue_bind($queueName, $exchangeName, $routingKey);
+                // publish the message to the exchange
+                $channel->basic_publish($message, $exchangeName, $routingKey);
+                // close the channel and the connection
+                $channel->close();
+                $connection->close();
+            });
         });
     }
 
-    public function pdf() {
+    public function pdf($cb) {
 
         //Well, nested spans seem to work. Good luck figuring out how to propagate the traceid to the Orders service, through RabbitMQ.
 
@@ -113,24 +114,33 @@ class OrderController extends Controller
         //Gonna look into logging too at some point i guess.
 
         $my_pdf_results = [];
-        startSpan('Start Generating a pdf using startspan!', function($span1) use(&$my_pdf_results) {
+        startSpan('Start Generating a pdf using startspan!', function($span1) use(&$my_pdf_results, $cb) {
             $span1->annotate('Found the requested order in the DB or some shit!');
 
-            startSpan('Doing some stuff using startspan!', function($span2) use(&$my_pdf_results) {
+            startSpan('Doing some stuff using startspan!', function($span2) use(&$my_pdf_results, $cb) {
                 $span2->tag('pdf_stuff', collect(['some pdf data!', 'even more pdf data stuff!'])->toJson());
                 $span2->annotate('Jep, something worth noting here!');
 
-                startSpan('Should send trace to Orders service about now, JEP!', function($span3) use(&$my_pdf_results) {
+                startSpan('Should send trace to Orders service about now, JEP!', function($span3) use(&$my_pdf_results, $cb) {
                     $span3->annotate('Guess ill make an annotation here');
 
-                    startSpan('and another span, why not', function($span4) use(&$my_pdf_results) {
+                    startSpan('and another span, why not', function($span4) use(&$my_pdf_results, $cb) {
+                        $cb($span4);
                         $my_pdf_results = ['pdf1', 'pdf2', 'pdf3', 'pdf4'];
                     });
                 });
 
                 $span2->annotate('Hmm, span3 finished, so we back to span2 or?! HMMMM');
+                startSpan('How about another span3 after the inner callback?', function($span3) {
+                    $span3->tag('this is the 2nd span3');
+                });
             });
-
+            startSpan('Perhaps another span2?', function($span2) {
+                $span2->tag('this is the 2nd span2');
+                startSpan('And a span 3 instide the 2nd span2?', function($span3) {
+                    $span3->tag('this is the 2nd span3 inside the 2nd span2');
+                });
+            });
             $span1->tag('pdf_results', json_encode($my_pdf_results));
         });
 

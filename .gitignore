@@ -15,10 +15,13 @@ npm-debug.log
 yarn-error.log
 /.fleet
 /.idea
-/.vscode
+**/.vscode
 /version-two/vendor
 /version-two/node_modules
 nginx/*/logs
 **/.vs
 **/obj
 **/bin
+**/redis-data
+redis/redis-data/dump.rdb
+*.rdb
