@@ -3,6 +3,8 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
 using System.Reflection;
+using Serilog;
+using Serilog.Enrichers.Span;
 
 public static class Monitoring
 {
@@ -16,5 +18,12 @@ public static class Monitoring
             .AddSource(ActivitySource.Name)
             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName: ActivitySource.Name))
             .Build();
+
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .Enrich.WithSpan()
+            .WriteTo.Seq("http://seq")
+            .WriteTo.Console()
+            .CreateLogger();
     }
 }

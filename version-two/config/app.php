@@ -192,6 +192,7 @@ return [
          \Arquivei\LaravelPrometheusExporter\GuzzleServiceProvider::class,
          \Arquivei\LaravelPrometheusExporter\DatabaseServiceProvider::class,
          \Bschmitt\Amqp\AmqpServiceProvider::class,
+         \App\Providers\LoggingServiceProvider::class,
         /*
          * Application Service Providers...
          */

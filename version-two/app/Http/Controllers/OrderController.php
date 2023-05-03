@@ -6,6 +6,7 @@ use Bschmitt\Amqp\Amqp;
 use App\Prometheus\MetricsCollector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Promethus\Storage\Redis;
 use Vinelab\Tracing\Facades\Trace;
 use \Prometheus\Counter;
@@ -54,7 +55,7 @@ class OrderController extends Controller
     public function printOrder(Request $request) {
         startSpan('Endpoint to initiate Generating a PDF', function($span) use($request){
             $this->pdf(function($span1) use($request) {
-
+                Log::channel('seq')->debug("message for seq from Laravel!");
                 $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection(
                     config('amqp.properties.production.host'),
                     config('amqp.properties.production.port'),
@@ -120,7 +121,7 @@ class OrderController extends Controller
             startSpan('Doing some stuff using startspan!', function($span2) use(&$my_pdf_results, $cb) {
                 $span2->tag('pdf_stuff', collect(['some pdf data!', 'even more pdf data stuff!'])->toJson());
                 $span2->annotate('Jep, something worth noting here!');
-
+                usleep(200000);
                 startSpan('Should send trace to Orders service about now, JEP!', function($span3) use(&$my_pdf_results, $cb) {
                     $span3->annotate('Guess ill make an annotation here');
 
@@ -135,10 +136,12 @@ class OrderController extends Controller
                     $span3->tag('this is the 2nd span3');
                 });
             });
+            usleep(500000);
             startSpan('Perhaps another span2?', function($span2) {
                 $span2->tag('this is the 2nd span2');
                 startSpan('And a span 3 instide the 2nd span2?', function($span3) {
                     $span3->tag('this is the 2nd span3 inside the 2nd span2');
+                    usleep(700000);
                 });
             });
             $span1->tag('pdf_results', json_encode($my_pdf_results));

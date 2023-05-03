@@ -1,5 +1,6 @@
 <?php
 
+
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -117,6 +118,18 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+        // Had to add the seq channel in a ServiceProvider instead, that loads after the Tracing service provider, otherwise the Trace instance doesn't exist, and thus we can't
+        // add the spanId, TraceId, etc. to the Message.
+       // 'seq' => [
+       //     'driver' => 'monolog',
+       //     'handler' => \Monolog\Handler\GelfHandler::class,
+       //     'formatter' => \App\Logging\CustomGelfMessageFormatter::class,
+       //     'level' => 'debug',
+       //     'handler_with' => [
+       //         'publisher' => new \Gelf\Publisher(new \Gelf\Transport\UdpTransport(env('SEQ_GELF_HOST', 'seq-input-gelf'), env('SEQ_GELF_PORT', '12201'))),
+       //         'formatter' => new \App\Logging\CustomGelfMessageFormatter(config('app.name')),
+       //     ]
+       // ]
     ],
 
 ];

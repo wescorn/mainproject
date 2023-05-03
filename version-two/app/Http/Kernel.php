@@ -23,6 +23,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \Arquivei\LaravelPrometheusExporter\PrometheusLaravelRouteMiddleware::class,
         \Vinelab\Tracing\Middleware\TraceRequests::class,
+        \App\Http\Middleware\OpenTelemetryLogMiddleware::class
     ];
 
     /**

@@ -140,6 +140,27 @@ services:
       - ./jenkins/auto-setup:/usr/share/jenkins/ref/init.groovy.d/
       - ../jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
+  seq:
+    image: datalust/seq:latest
+    ports:
+      - "5341:80"
+    environment:
+      - ACCEPT_EULA=Y
+    volumes:
+      - ../seq_data:/data
+    networks:
+      - mainnetwork
+  seq-input-gelf:
+    image: datalust/seq-input-gelf:latest
+    depends_on:
+      - seq
+    ports:
+      - "12201:12201/udp"
+    environment:
+      SEQ_ADDRESS: "http://seq:5341"
+    restart: unless-stopped
+    networks:
+      - mainnetwork
     #command: bash -c "sleep 5 && ./usr/share/jenkins/ref/init.groovy.d/create-jobs.sh"
   #GRAFANA is like a visualisation thing that can show graphs and shit based on some data source like Zipkin or Prometheus.    
   grafana:
