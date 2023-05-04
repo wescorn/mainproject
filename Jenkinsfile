@@ -26,5 +26,10 @@ pipeline {
                 }
             }
         }
+        stage("deploy") {
+            steps {
+                build job: 'MainProject-Deploy', parameters: [[$class: 'StringParameterValue', name: 'DEPLOY_NUMBER', value: "${BUILD_NUMBER}"]]
+            }
+        }
     }
 }
