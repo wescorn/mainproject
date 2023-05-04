@@ -4,7 +4,7 @@ pipeline {
         string defaultValue: "", name: 'DEPLOY_NUMBER', trim: true
     }
     stages {
-        stage("Deploy") {
+        stage("deploy") {
             steps {
                 sh "docker compose rm"
                 sh "docker compose up -d"
