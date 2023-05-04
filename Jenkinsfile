@@ -3,6 +3,9 @@ pipeline {
     triggers {
         pollSCM("* * * * *")
     }
+    environment {
+        DEPLOY_NUMBER = "${BUILD_NUMBER}"
+    }
     stages {
         stage("build") {
             steps {
