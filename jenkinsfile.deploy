@@ -6,8 +6,8 @@ pipeline {
     stages {
         stage("Deploy") {
             steps {
-                sh "docker compose rm"
-                sh "docker compose up -d orders versiontwo"
+                sh "docker compose rm orders versiontwo"
+                sh "docker compose up orders versiontwo"
             }
         }
     }
