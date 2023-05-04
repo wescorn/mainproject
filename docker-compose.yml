@@ -39,7 +39,7 @@ services:
     restart: unless-stopped
     networks:
       - mainnetwork
-  #redis is needed for prometheus to work. It's some kind of storage thing.
+  #redis is needed for prometheus to work. It's some kind of storage thing.f
   redis:
     image: redis
     ports:
