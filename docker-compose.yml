@@ -48,9 +48,9 @@ services:
       - ./redis/redis-data:/data
     networks:
       - mainnetwork
-  versiontwo-db:
+  db:
     image: mysql:8.0
-    container_name: versiontwo-db
+    container_name: db
     restart: unless-stopped
     env_file:
       - ./version-two/.env
