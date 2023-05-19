@@ -11,7 +11,7 @@ string cloudAMQPConnectionString = "host=rabbitmq";
 
 // Add services to the container.
 
-builder.Services.AddDbContext<OrdersContext>(opt => opt.UseMySQL("connection string"));//TODO Make Connection string
+builder.Services.AddDbContext<OrdersContext>(opt => opt.UseMySQL("Server=mysqldb;Database=orders;Uid=root;Pwd=admin"));//TODO Make Connection string
 
 // Register repositories for dependency injection
 builder.Services.AddScoped<IRepository<Order>, OrderRepository>();

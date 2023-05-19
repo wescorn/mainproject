@@ -6,7 +6,7 @@ namespace Orders.Data
     {
         public void Initialize(OrdersContext context)
         {
-            context.Database.EnsureDeleted();
+            //context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
             // Look for any Orders
