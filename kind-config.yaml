@@ -1,0 +1,19 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraMounts:
+    - hostPath: /home/wes/Documents/GitHub/MainProjectParentFolder/mainproject/version-two
+      containerPath: /var/www
+    - hostPath: /home/wes/Documents/Data/Redis
+      containerPath: /data
+    - hostPath: /home/wes/Documents/Data/Orders
+      containerPath: /orders
+    - hostPath: /home/wes/Documents/Data/Seq
+      containerPath: /seq
+    - hostPath: /home/wes/Documents/Data/Cassandra
+      containerPath: /cassandra
+    - hostPath: /home/wes/Documents/Data/Prometheus
+      containerPath: /prometheus
+    - hostPath: /home/wes/Documents/Data/Mysqldb
+      containerPath: /mysqldb

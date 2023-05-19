@@ -7,13 +7,11 @@ services:
         uid: 1000
       context: ./version-two
       dockerfile: Dockerfile
-    image: ${DOCKERHUB_NAME}/versiontwo:${DEPLOY_NUMBER}
+    image: versiontwo:local
     ports:
       - 9000:9000
     depends_on:
       - zipkin
-    environment:
-      - ZIPKIN_BASE_URL=http://zipkin:9411
     container_name: versiontwo-app
     restart: unless-stopped
     working_dir: /var/www/
@@ -22,12 +20,14 @@ services:
     networks:
       - mainnetwork
   orders:
-    image: ${DOCKERHUB_NAME}/orders:${DEPLOY_NUMBER}
+    image: orders:local
     deploy:
       replicas: 3
     build:
       context: ./Orders
       dockerfile: Orders/Dockerfile
+    env_file:
+      - ./.env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
@@ -116,6 +116,7 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
+    user: root
     ports:
       - 9090:9090
     volumes:

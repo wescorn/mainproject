@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seq-input-gelf
+  labels:
+    app: seq-input-gelf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seq-input-gelf
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: seq-input-gelf
+    spec:
+      restartPolicy: Always
+      containers:
+        - env:
+            - name: SEQ_ADDRESS
+              value: http://seq:5341
+          image: datalust/seq-input-gelf:latest
+          name: seq-input-gelf
+          ports:
+            - containerPort: 12201
+              protocol: UDP
+      

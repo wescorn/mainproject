@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin
+  labels:
+    app: zipkin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zipkin
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: zipkin
+    spec:
+      restartPolicy: Always
+      containers:
+        - env:
+            - name: CASSANDRA_CONTACT_POINTS
+              value: cassandra:9042
+            - name: CASSANDRA_KEYSPACE
+              value: zipkin
+            - name: CASSANDRA_LOCAL_DC
+              value: datacenter1
+            - name: STORAGE_TYPE
+              value: cassandra3
+          image: openzipkin/zipkin
+          name: zipkin
+          ports:
+            - containerPort: 9411

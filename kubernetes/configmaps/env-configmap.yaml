@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  APPDATA: ../APP_DATA
+  DEPLOY_NUMBER: "1"
+  DOCKERHUB_NAME: sgnpc
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: orders-env
+  name: env

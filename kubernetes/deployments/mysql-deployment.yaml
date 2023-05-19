@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysqldb
+  labels:
+    app: mysqldb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysqldb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysqldb
+    spec:
+      restartPolicy: Always
+      containers:
+      - env:
+          - name: MYSQL_DATABASE
+            value: mysqldb
+          - name: MYSQL_PASSWORD
+            value: admin
+          - name: MYSQL_ROOT_PASSWORD
+            value: admin
+          - name: MYSQL_USER
+            value: admin
+        image: mysql:8.0
+        name: mysqldb
+        ports:
+          - containerPort: 3306
+        volumeMounts:
+          - name: mysqldb-claim
+            mountPath: /var/lib/mysql
+      volumes:
+        - name: mysqldb-claim
+          persistentVolumeClaim:
+            claimName: mysqldb-claim

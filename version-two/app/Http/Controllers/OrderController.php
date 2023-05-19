@@ -24,7 +24,6 @@ class OrderController extends Controller
     }
 
     public function getOrders(){
-
         $response = Http::get("http://orders/Order");
 
         $orders = [];
@@ -152,12 +151,7 @@ class OrderController extends Controller
 
     public function test() {
 
-        $orders = Order::factory()->count(5)->make()->each(function (Order $order) {
-            $orderLines = OrderLine::factory()->count(3)->make();
-            $order->setRelation('order_lines', $orderLines);
-        });
-
-        return $orders;
+        return 'Jep';
     }
 
 }

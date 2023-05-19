@@ -25,3 +25,4 @@ nginx/*/logs
 **/redis-data
 redis/redis-data/dump.rdb
 *.rdb
+redis/redis-data/dump.rdb

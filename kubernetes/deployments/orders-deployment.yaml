@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders
+  labels:
+    app: orders
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: orders
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: orders
+    spec:
+      containers:
+        - image: orders:local
+          imagePullPolicy: Never
+          name: orders
+          volumeMounts:
+            - mountPath: /orders
+              name: orders-claim
+      restartPolicy: Always
+      volumes:
+        - name: orders-claim
+          persistentVolumeClaim:
+            claimName: orders-claim

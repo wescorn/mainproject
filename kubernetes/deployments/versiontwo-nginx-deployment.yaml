@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: versiontwo-nginx
+  labels:
+    app: versiontwo-nginx
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: versiontwo-nginx
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: versiontwo-nginx
+        tier: backend
+    spec:
+      restartPolicy: Always
+      containers:
+        - image: nginx
+          name: versiontwo-nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /var/www
+              name: versiontwo-www
+            - mountPath: /etc/nginx/conf.d
+              name: config
+      volumes:
+        - name: versiontwo-www
+          persistentVolumeClaim:
+            claimName: versiontwo-www-pvc
+        - name: config
+          configMap:
+            name: nginx-config
+            items:
+              - key: config
+                path: site.conf

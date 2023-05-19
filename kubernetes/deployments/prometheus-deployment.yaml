@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      restartPolicy: Always
+      containers:
+        - args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --storage.tsdb.path=/prometheus
+          image: prom/prometheus
+          name: prometheus
+          ports:
+            - containerPort: 9090
+          securityContext:
+            runAsUser: 1000
+          volumeMounts:
+            - name: prometheus-claim
+              mountPath: /prometheus
+            - name: prometheus-config
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+      volumes:
+        - name: prometheus-claim
+          persistentVolumeClaim:
+            claimName: prometheus-claim
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config

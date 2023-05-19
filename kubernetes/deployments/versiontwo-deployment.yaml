@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: versiontwo
+  labels:
+    app: versiontwo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: versiontwo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: versiontwo
+    spec:
+      restartPolicy: Always
+      containers:
+        - image: versiontwo:local
+          name: versiontwo-app
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 9000
+          envFrom:
+            - configMapRef:
+                name: versiontwo-config
+          volumeMounts:
+            - mountPath: /var/www
+              name: versiontwo-www
+          workingDir: /var/www/
+      volumes:
+        - name: versiontwo-www
+          persistentVolumeClaim:
+            claimName: versiontwo-www-pvc
