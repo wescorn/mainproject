@@ -48,16 +48,16 @@ services:
       - ./redis/redis-data:/data
     networks:
       - mainnetwork
-  db:
+  mysqldb:
     image: mysql:8.0
-    container_name: db
+    container_name: mysqldb
     restart: unless-stopped
     env_file:
       - ./version-two/.env
     ports:
-      - "3307:3306"
+      - "3306:3306"
     environment:
-      MYSQL_DATABASE: versiontwo
+      MYSQL_DATABASE: mysqldb
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_PASSWORD: admin
       MYSQL_USER: admin

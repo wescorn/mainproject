@@ -2,6 +2,7 @@
 using Orders.Data;
 using Orders.Infrastructure;
 using Orders.Models;
+using Serilog;
 using System.Net.Security;
 
 namespace Orders.Controllers
@@ -41,7 +42,8 @@ namespace Orders.Controllers
         [HttpGet("{id}", Name = "GetOrder")]
         public IActionResult GetOrder(int id)
         {
-
+            Log.Debug("Received a PDF Generate message, directly in ordercontroller! (Machine: {Machine})", System.Environment.MachineName);
+            Console.WriteLine("THIS SURE WORKS");
             var item = repository.Get(id);
             if (item == null)
             {
@@ -54,13 +56,33 @@ namespace Orders.Controllers
             return Ok();
         }
 
-
-
-        [HttpGet("test")]
-        public IActionResult test()
+        [HttpPost]
+        public Task<ActionResult<OrderDto>> PostOrder(OrderDto orderDto)
         {
-            return Json(all_orders);
+            var order = new Order {
+                //Id = orderDto.Id
+            };
+
+            var newOrder = repository.Add(order);
+
+            return Task.FromResult<ActionResult<OrderDto>>(
+                new CreatedAtActionResult(nameof(GetOrder), 
+                                "Order", 
+                                new { id = newOrder.Id }, 
+                                OrderToDTO(newOrder)));
         }
+        
+        private static OrderDto OrderToDTO(Order order) => new OrderDto
+        {
+            Id = order.Id,
+            OrderLines = order.OrderLines?.Select(ol => new OrderLineDto
+            {
+                id = ol.id,
+                OrderId = ol.OrderId,
+                ProductId = ol.ProductId,
+                Quantity = ol.Quantity
+            }).ToList()
+        };
 
         //Successfully generates a PDF in the pdf folder, mapped from the docker-container to ../pdf
         [HttpGet("test2")]

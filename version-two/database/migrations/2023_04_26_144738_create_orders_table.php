@@ -21,8 +21,8 @@ return new class extends Migration
         if (!Schema::hasTable('order_lines')) {
             Schema::create('order_lines', function (Blueprint $table) {
                 $table->id();
-                $table->bigInteger('order_id');
-                $table->bigInteger('product_id');
+                $table->bigInteger('order_id')->unsigned();
+                $table->bigInteger('product_id')->unsigned();
                 $table->integer('quantity');
                 $table->foreign('order_id')->references('id')->on('orders');
             });

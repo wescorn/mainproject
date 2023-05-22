@@ -1,11 +1,10 @@
 <?php
 
+use App\Models\Order;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
-use Prometheus\CollectorRegistry;
-use Prometheus\Storage\InMemory;
-use Prometheus\RenderTextFormat;
+use Inertia\Inertia;
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,6 +20,27 @@ use Prometheus\RenderTextFormat;
 
 Route::get('/orders/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');
 //TODO Make function to print pdf
-Route::get('/', [OrderController::class, 'getOrders'])->name('orders.getOrders');
+Route::get('/', function () {
+    $response = Http::get("http://orders/Order");
+    $orders = Order::fromArray(json_decode($response->body()));
+    return Inertia::render('Index', [
+        'orders' => $orders
+    ]);
+})->name('home');
+
+Route::get('/login', function () {
+    return Inertia::render('Login');
+})->name('login');
+
+Route::get('/test', function () {
+
+    return Inertia::render('Test', [
+        'laravel' => \Illuminate\Foundation\Application::VERSION,
+        'php' => PHP_VERSION,
+    ]);
+
+});
+
+
 Route::post('/print', [OrderController::class, 'printOrder'])->name('orders.printOrder');
 Route::get('/orders/test', [OrderController::class, 'test'])->name('orders.test');

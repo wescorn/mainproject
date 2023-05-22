@@ -25,7 +25,6 @@ class OrderController extends Controller
 
     public function getOrders(){
         $response = Http::get("http://orders/Order");
-
         $orders = [];
         foreach (json_decode($response->body()) as $order) {
             $mOrder = new Order(["id" => Arr::get($order, 'id', 1)]);
@@ -48,56 +47,23 @@ class OrderController extends Controller
 
         //dump($orders->body());
 
-        return view("welcome", ['orders' => $orders]);
+        return view("app", ['orders' => $orders]);
     }
 
     public function printOrder(Request $request) {
         startSpan('Endpoint to initiate Generating a PDF', function($span) use($request){
             $this->pdf(function($span1) use($request) {
-                Log::channel('seq')->debug("message for seq from Laravel!");
-                $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection(
-                    config('amqp.properties.production.host'),
-                    config('amqp.properties.production.port'),
-                    config('amqp.properties.production.username'),
-                    config('amqp.properties.production.password'),
-                    config('amqp.properties.production.vhost'),
-                );
-                $channel = $connection->channel();
-            
-                // define the exchange name and type
-                $exchangeName = 'OrderExchange';
-                $exchangeType = 'topic';
-                // define the queue name
-                $queueName = 'OrderPrintQueue';
-                // define the routing key
-                $routingKey = 'generate';
-                // define the message headers
-                $headers = new \PhpAmqpLib\Wire\AMQPTable([
-                    'Type' => 'Orders.Models.GetOrderMessage'
+                
+                simple_amqp_send(['id' => $request->input('id')], [
+                    'exchange' => 'OrderExchange',
+                    'type' => 'topic',
+                    'queue' => 'OrderPrintQueue',
+                    'topic' => 'generate',
+                    'headers' => [
+                        'Type' => 'Orders.Models.GetOrderMessage'
+                    ]
                 ]);
-
-                $msg_data = [
-                    'id' => $request->input('id')
-                ];
-                // create a new message object
-                $message = new \PhpAmqpLib\Message\AMQPMessage(json_encode($msg_data), array(
-                    'application_headers' => $headers,
-                    'content_type' => 'application/json',
-                    'delivery_mode' => 2,
-                ));
-
-                $message = Trace::inject($message, Formats::AMQP);
-                // declare the exchange with the specific type
-                $channel->exchange_declare($exchangeName, $exchangeType, false, true, false);
-                // declare the queue
-                $channel->queue_declare($queueName, false, true, false, false);
-                // bind the queue to the exchange with the routing key
-                $channel->queue_bind($queueName, $exchangeName, $routingKey);
-                // publish the message to the exchange
-                $channel->basic_publish($message, $exchangeName, $routingKey);
-                // close the channel and the connection
-                $channel->close();
-                $connection->close();
+                return to_route('home');
             });
         });
     }

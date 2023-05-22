@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Orders.Models
 {
-    public class Order
+    public class OrderDto
     {
         public int Id { get; set; }
-        public IList<OrderLine>? OrderLines { get; set; }
+        public List<OrderLineDto>? OrderLines { get; set; }
     }
 
-    public class OrderLine
+    public class OrderLineDto
     {
         public int id { get; set; }
         public int OrderId { get; set; }

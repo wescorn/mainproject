@@ -55,9 +55,9 @@ namespace Orders.Infrastructure
                     string spanId = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["x-b3-spanid"]);
                     var parentContext = new ActivityContext(ActivityTraceId.CreateFromString(traceId), ActivitySpanId.CreateFromString(spanId), ActivityTraceFlags.Recorded, "", true);
                     using (var activity1 = Monitoring.ActivitySource.StartActivity("Received PDF Gen request in C# (MachineName: "+System.Environment.MachineName+")", ActivityKind.Consumer, parentContext)) {
-                        Log.Logger.Debug("Received a PDF Generate message, and just started a new Span!(Machine: {Machine})", System.Environment.MachineName);
+                        Log.Logger.Information("Received a PDF Generate message, and just started a new Span!(Machine: {Machine})", System.Environment.MachineName);
                         using (var activity2 = Monitoring.ActivitySource.StartActivity("Generating PDF!", ActivityKind.Consumer)) {
-                            Log.Logger.Debug("About to process the message and generate the PDF! (Machine: {Machine})", System.Environment.MachineName);
+                            Log.Logger.Information("About to process the message and generate the PDF! (Machine: {Machine})", System.Environment.MachineName);
                             var body = ea.Body.ToArray();
                             var message = Encoding.UTF8.GetString(body);
                             var json = JsonConvert.DeserializeObject<GetOrderMessage>(message);
