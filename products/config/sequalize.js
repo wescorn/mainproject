@@ -3,4 +3,6 @@ const models = {
     // Add other models here
   };
 
-module.exports = models;
+module.exports = {
+  models
+};

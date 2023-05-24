@@ -1,4 +1,4 @@
-const { models } = require('../config/sequelize');
+const { models } = require('../config/sequalize');
 
 const getAll = () => new Promise((resolve, reject) => {
     models.Product.findAll()

@@ -4,21 +4,14 @@ using System.Text;
 
 namespace Orders.Infrastructure
 {
-    public class MessagePublisher : IMessagePublisher, IDisposable
+    public class MessagePublisher : IMessagePublisher
     {
-        IBus bus;
         private const string UName = "guest";
         private const string PWD = "guest";
         private const string HName = "rabbitmq";
 
-        public MessagePublisher(string connectionString)
+        public MessagePublisher()
         {
-            bus = RabbitHutch.CreateBus(connectionString);
-        }
-
-        public void Dispose()
-        {
-            bus.Dispose();
         }
 
         /*

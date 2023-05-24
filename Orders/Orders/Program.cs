@@ -20,7 +20,7 @@ builder.Services.AddScoped<IRepository<Order>, OrderRepository>();
 builder.Services.AddTransient<IDbInitializer, DbInitializer>();
 
 // Register MessagePublisher (a messaging gateway) for dependency injection
-builder.Services.AddSingleton<IMessagePublisher>(new MessagePublisher(cloudAMQPConnectionString));
+builder.Services.AddSingleton<IMessagePublisher>(new MessagePublisher());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -2,11 +2,11 @@ const { Sequelize, DataTypes } = require('sequelize');
 //const sequelize = require('../config/sequalize'); // Assuming you've configured sequelize connection
 
 const sequelize = new Sequelize(
-  'productsdb',
-  'DATABASE_USERNAME',
-  'DATABASE_PASSWORD',
+  'products',
+  'root',
+  'admin',
    {
-     host: 'DATABASE_HOST',
+     host: '127.0.0.1',
      dialect: 'mysql'
    }
  );
@@ -44,4 +44,6 @@ sequelize.sync().then(() => {
   console.error('Unable to create table : ', error);
 });
 
-module.exports = Product;
+module.exports = {
+  Product
+};
