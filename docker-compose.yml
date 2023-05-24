@@ -47,6 +47,14 @@ services:
     restart: unless-stopped
     networks:
       - mainnetwork
+  apigateway:
+    image: apigateway:local
+    deploy:
+      replicas: 1
+    build:
+      context: ./apigateway
+      dockerfile: Dockerfile
+    restart: unless-stopped
   #redis is needed for prometheus to work. It's some kind of storage thing.f
   redis:
     image: redis

@@ -21,8 +21,7 @@ use App\Models\User;
 Route::get('/orders/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');
 //TODO Make function to print pdf
 Route::get('/', function () {
-    $response = Http::get("http://orders/Order");
-    $orders = Order::fromArray(json_decode($response->body()));
+    $orders = (new \App\Http\Controllers\API\OrderController())->index();
     return Inertia::render('Index', [
         'orders' => $orders
     ]);

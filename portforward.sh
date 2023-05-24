@@ -1,4 +1,4 @@
-no#!/bin/bash
+#!/bin/bash
 
 echo "Port Forwarding grafana: http://localhost:3100/"
 kubectl port-forward service/grafana 3100:3100 &
@@ -25,7 +25,7 @@ kubectl port-forward service/seq 5341:5341 &
 PF6_PID=$!
 
 echo "Port Forwarding versiontwo (nginx actually): http://localhost:8000/"
-kubectl port-forward service/versiontwo-nginx-service 8000:80 &
+kubectl port-forward service/versiontwo-nginx 8000:80 &
 PF7_PID=$!
 
 echo "Port Forwarding zipkin: http://localhost:9411/"
@@ -35,6 +35,10 @@ PF8_PID=$!
 echo "Port Forwarding products: http://localhost:3000/"
 kubectl port-forward service/products 3000:3000 &
 PF9_PID=$!
+
+echo "Port Forwarding apigateway: http://localhost:3400/"
+kubectl port-forward service/apigateway 3400:80 &
+PF10_PID=$!
 
 # Wait for user input to stop the port forwarding
 read -p "Press any key to stop port forwarding..."
@@ -49,3 +53,4 @@ kill $PF6_PID
 kill $PF7_PID
 kill $PF8_PID
 kill $PF9_PID
+kill $PF10_PID

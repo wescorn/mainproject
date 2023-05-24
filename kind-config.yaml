@@ -19,3 +19,5 @@ nodes:
       containerPath: /mysqldb
     - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/mainproject/products
       containerPath: /products
+    - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/mainproject/apigateway
+      containerPath: /apigateway

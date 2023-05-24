@@ -58,6 +58,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'apigateway' => env('API_GATEWAY_URL', 'http://apigateway'),
+
     'asset_url' => env('ASSET_URL'),
 
     /*

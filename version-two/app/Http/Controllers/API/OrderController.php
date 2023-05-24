@@ -13,7 +13,11 @@ use Log;
 class OrderController extends Controller
 {
 
-    private $order_endpoint = "http://orders/Order";
+    private $order_endpoint;
+
+    public function __construct() {
+        $this->order_endpoint = config('app.apigateway')."/orders";
+    }
 
     /**
      * Display a listing of the resource.
@@ -22,9 +26,10 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $response = Http::get($this->order_endpoint);
-        $orders = Order::fromArray(json_decode($response->body()));
-        return response()->json($orders);
+        Log::channel('seq')->info("Requesting All Orders (Laravel) from {$this->order_endpoint}/Order");
+        $response = guzzle()->get($this->order_endpoint.'/Order');
+        $orders = Order::fromArray(json_decode($response->getBody()));
+        return $orders;
     }
 
     /**

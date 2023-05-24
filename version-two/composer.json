@@ -9,7 +9,7 @@
         "arquivei/laravel-prometheus-exporter": "^3.0",
         "bschmitt/laravel-amqp": "^2.0",
         "graylog2/gelf-php": "^2.0",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.6",
         "inertiajs/inertia-laravel": "^0.6.9",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",

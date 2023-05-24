@@ -3,7 +3,7 @@ const amqp = require('amqplib');
 async function messageListener() {
     try {
         // Connect to RabbitMQ server
-        const connection = await amqp.connect('amqp://localhost');
+        const connection = await amqp.connect('amqp://rabbitmq');
     
         // Create a channel
         const channel = await connection.createChannel();

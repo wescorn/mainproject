@@ -20,6 +20,8 @@ spec:
         - image: orders:local
           imagePullPolicy: Never
           name: orders
+          ports:
+            - containerPort: 80
           volumeMounts:
             - mountPath: /orders
               name: orders-claim

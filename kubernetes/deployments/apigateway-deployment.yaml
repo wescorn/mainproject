@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway
+  labels:
+    app: apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: apigateway
+    spec:
+      restartPolicy: Always
+      containers:
+        - image: apigateway:local
+          imagePullPolicy: Never
+          name: apigateway
+          ports:
+            - containerPort: 3400
+          volumeMounts:
+            - mountPath: /apigateway
+              name: apigateway
+          workingDir: /apigateway
+      volumes:
+        - name: apigateway
+          persistentVolumeClaim:
+            claimName: apigateway-pvc
+

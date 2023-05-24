@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "87dbd5288d68ff9e573387a189927a6d",
+    "content-hash": "9936b426a3fa3ca1bd4873f65ccde42a",
     "packages": [
         {
             "name": "arquivei/laravel-prometheus-exporter",

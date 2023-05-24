@@ -30,7 +30,7 @@ if (!function_exists('array_is_list')) {
 }
 
 
-if (!function_exists('amqp_helper')) {
+if (!function_exists('simple_amqp_send')) {
   function simple_amqp_send($message, $options = [], $message_props = [])
   {
 
@@ -85,5 +85,26 @@ if (!function_exists('amqp_helper')) {
     $connection->close();
 
     Log::channel('seq')->info("AMQP Message Published (From Laravel)", ['topic' => $topic, 'exchange' => $exchange, 'queue' => $queue, 'message' => $m_message]);
+  }
+}
+
+
+if (!function_exists('guzzle')) {
+  function guzzle($config = [])
+  {
+    $stack = new GuzzleHttp\HandlerStack();
+    $stack->setHandler(new GuzzleHttp\Handler\CurlHandler());
+    $stack->unshift(GuzzleHttp\Middleware::mapRequest(function (Psr\Http\Message\RequestInterface $request) {
+        $context = \Vinelab\Tracing\Facades\Trace::getCurrentSpan()->getContext()->getRawContext();
+        $request = $request->withHeader(
+          'X-B3-ParentSpanId', $context->getParentId())->withHeader(
+          'X-B3-SpanId', $context->getSpanId())->withHeader(
+          'X-B3-TraceId', $context->getTraceId())->withHeader(
+          'X-B3-Sampled', $context->isSampled() ? 1 : 0);
+        return $request;
+    }));
+
+    $client = new GuzzleHttp\Client(['handler' => $stack, ...$config]);
+    return $client;
   }
 }

@@ -18,35 +18,19 @@ use Vinelab\Tracing\Propagation\Formats;
 
 class OrderController extends Controller
 {
-    public function __construct()
-    {
-       
+    public $endpoint;
+
+
+    public function __construct() {
+        $this->endpoint = config('app.apigateway')."/orders";
     }
 
     public function getOrders(){
-        $response = Http::get("http://orders/Order");
-        $orders = [];
-        foreach (json_decode($response->body()) as $order) {
-            $mOrder = new Order(["id" => Arr::get($order, 'id', 1)]);
-            $lines = [];
-            foreach (Arr::get($order, 'orderLines', [1]) as $index => $line) {
-                $mLine = new OrderLine([
-                    "id" => Arr::get($line, 'id', $index),
-                    "order_id" => Arr::get($order, 'id', 1),
-                    "product_id" => Arr::get($line, 'product_id', $index ?: 1),
-                    "quantity" => Arr::get($line, 'quantity', $index ?: 1)
-                ]);
-            
-                array_push($lines, $mLine);
-            }
-            $mOrder->orderLines = $lines;
-            array_push($orders, $mOrder);
-        }
+        $m_endpoint = "{$this->endpoint}/Order";
+        Log::channel('seq')->info("Requesting All Orders (Laravel) from {$m_endpoint}");
+        $response = Http::get("{$this->endpoint}/Order");
+        $orders = Order::fromArray(json_decode($response->body()));
         
-        //dd($orders->body());
-
-        //dump($orders->body());
-
         return view("app", ['orders' => $orders]);
     }
 
