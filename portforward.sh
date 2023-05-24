@@ -33,7 +33,7 @@ kubectl port-forward service/zipkin 9411:9411 &
 PF8_PID=$!
 
 echo "Port Forwarding products: http://localhost:3000/"
-kubectl port-forward service/products 3000:3000 &
+kubectl port-forward service/products 3000:80 &
 PF9_PID=$!
 
 echo "Port Forwarding apigateway: http://localhost:3400/"

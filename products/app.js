@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('./config');
 const rabbitmq = require('./rabbitmq/rabbitmq')
+const database = require('./infrastructure/database')
 const app = express();
 
 const testRoute = require('./routes/testRoute');
@@ -19,6 +20,8 @@ app.use(express.urlencoded());
 app.use('/test', accessLog, testRoute);
 app.use('/user', accessLog, userRoute);
 app.use('/product', accessLog, productRoute);
+ 
+database.initialize();
 
 rabbitmq.messageListener().catch((error) => {
   console.error('Error running message listener: ', error)

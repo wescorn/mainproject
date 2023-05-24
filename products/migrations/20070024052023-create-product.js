@@ -1,7 +1,10 @@
 'use strict';
+
+const { DATE } = require("sequelize");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Product', {
+    await queryInterface.createTable('Products', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,21 +12,20 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false
       },
       price: {
-        type: DataTypes.FLOAT,
+        type: Sequelize.FLOAT,
         allowNull: false
       },
       stock: {
-        type: DataTypes.NUMBER,
+        type: Sequelize.INTEGER,
         allowNull: false
-      }
-      
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Product');
+    await queryInterface.dropTable('Products');
   }
 };

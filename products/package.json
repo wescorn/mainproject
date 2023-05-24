@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "db-migrate": "npx sequelize db:migrate"
+    "migrate": "npx sequelize db:migrate",
+    "seed": "npx sequelize-cli db:seed:all"
   },
   "author": "netraj patel",
   "license": "ISC",

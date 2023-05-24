@@ -1,5 +1,4 @@
-﻿using EasyNetQ;
-using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 using System.Text;
 
 namespace Orders.Infrastructure
