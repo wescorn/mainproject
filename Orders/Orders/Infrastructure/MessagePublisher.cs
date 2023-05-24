@@ -10,10 +10,6 @@ namespace Orders.Infrastructure
         private const string PWD = "guest";
         private const string HName = "rabbitmq";
 
-        public MessagePublisher()
-        {
-        }
-
         /*
          * Publish Order Status Changed to change product stocks
          */
@@ -32,8 +28,6 @@ namespace Orders.Infrastructure
             properties.Persistent = false;
             byte[] messagebuffer = Encoding.Default.GetBytes(topic);
             model.BasicPublish("OrderExchange", "changed", properties, messagebuffer);
-            
-            //bus.PubSub.Publish(id, topic);
         }
     }
 }

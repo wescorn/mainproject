@@ -20,7 +20,6 @@ app.use('/test', accessLog, testRoute);
 app.use('/user', accessLog, userRoute);
 app.use('/product', accessLog, productRoute);
 
-
 rabbitmq.messageListener().catch((error) => {
   console.error('Error running message listener: ', error)
 });

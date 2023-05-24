@@ -37,4 +37,4 @@ async function messageListener() {
     }
 }
 
-module.exports = messageListener;
+module.exports = {messageListener};

@@ -1,7 +1,7 @@
-const { models } = require('../config/sequalize');
+const db = require('../models');
 
 const getAll = () => new Promise((resolve, reject) => {
-    models.Product.findAll()
+    db.Product.findAll()
     .then((products) => {
         resolve(products);
     })
