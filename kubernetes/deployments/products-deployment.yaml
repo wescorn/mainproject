@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products
+  labels:
+    app: products
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: products
+    spec:
+      restartPolicy: Always
+      containers:
+        - image: products:local
+          imagePullPolicy: Never
+          name: products
+          ports: 
+            - containerPort: 3000
+          volumeMounts:
+            - mountPath: /products
+              name: products
+          workingDir: /products
+      volumes:
+        - name: products
+          persistentVolumeClaim:
+            claimName: products-pvc

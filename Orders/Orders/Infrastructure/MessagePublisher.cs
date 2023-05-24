@@ -21,7 +21,10 @@ namespace Orders.Infrastructure
             bus.Dispose();
         }
 
-        public void PublishOrder(int id, string topic)
+        /*
+         * Publish Order Status Changed to change product stocks
+         */
+        public void OrderStatusChanged(string topic)
         {
             //Main entry point to the RabbitMQ .NET AMQP client
             var connectionFactory = new ConnectionFactory()
@@ -34,10 +37,9 @@ namespace Orders.Infrastructure
             var model = connection.CreateModel();
             var properties = model.CreateBasicProperties();
             properties.Persistent = false;
-            byte[] messagebuffer = Encoding.Default.GetBytes("Direct Message");
-            model.BasicPublish("request.exchange", "directexchange_key", properties, messagebuffer);
+            byte[] messagebuffer = Encoding.Default.GetBytes(topic);
+            model.BasicPublish("OrderExchange", "changed", properties, messagebuffer);
             
-
             //bus.PubSub.Publish(id, topic);
         }
     }

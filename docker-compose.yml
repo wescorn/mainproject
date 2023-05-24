@@ -39,6 +39,14 @@ services:
     restart: unless-stopped
     networks:
       - mainnetwork
+  products:
+    image: products:local
+    build:
+      context: ./products
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - mainnetwork
   #redis is needed for prometheus to work. It's some kind of storage thing.f
   redis:
     image: redis

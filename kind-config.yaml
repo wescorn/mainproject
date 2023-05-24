@@ -3,17 +3,19 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
     extraMounts:
-    - hostPath: /home/wes/Documents/GitHub/MainProjectParentFolder/mainproject/version-two
+    - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/mainproject/version-two
       containerPath: /var/www
-    - hostPath: /home/wes/Documents/Data/Redis
+    - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/Data/Redis
       containerPath: /data
-    - hostPath: /home/wes/Documents/Data/Orders
+    - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/Data/Orders
       containerPath: /orders
-    - hostPath: /home/wes/Documents/Data/Seq
+    - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/Data/Seq
       containerPath: /seq
-    - hostPath: /home/wes/Documents/Data/Cassandra
+    - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/Data/Cassandra
       containerPath: /cassandra
-    - hostPath: /home/wes/Documents/Data/Prometheus
+    - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/Data/Prometheus
       containerPath: /prometheus
-    - hostPath: /home/wes/Documents/Data/Mysqldb
+    - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/Data/Mysqldb
       containerPath: /mysqldb
+    - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/mainproject/products
+      containerPath: /products

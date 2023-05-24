@@ -24,7 +24,9 @@ namespace Orders.Infrastructure
 
             // Add some content to the PDF
             Paragraph heading = new Paragraph("Order ID: "+ (order.Id));
+            Paragraph status = new Paragraph("Order Status: " + (order.Status));
             document.Add(heading);
+            document.Add(status);
 
             foreach (OrderLine orderline in order.OrderLines)
             {

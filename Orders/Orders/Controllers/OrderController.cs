@@ -24,10 +24,10 @@ namespace Orders.Controllers
             //Just for testing
             all_orders = new List<Order>
             {
-                new Order { Id = 1, OrderLines = new List<OrderLine> { new OrderLine { OrderId = 1, ProductId = 1, Quantity = 2 } } },
-                new Order { Id = 2, OrderLines = new List<OrderLine> { new OrderLine { OrderId = 2, ProductId = 2, Quantity = 2 }, new OrderLine { OrderId = 2, ProductId = 3, Quantity = 1 } } },
-                new Order { Id = 3, OrderLines = new List<OrderLine> { new OrderLine { OrderId = 3, ProductId = 2, Quantity = 4 }, new OrderLine { OrderId = 3, ProductId = 1, Quantity = 2 } } },
-                new Order { Id = 4, OrderLines = new List<OrderLine> { new OrderLine { OrderId = 4, ProductId = 3, Quantity = 1 } } }
+                new Order { Id = 1, Status = "transit", OrderLines = new List<OrderLine> { new OrderLine { OrderId = 1, ProductId = 1, Quantity = 2 } } },
+                new Order { Id = 2, Status = "transit", OrderLines = new List<OrderLine> { new OrderLine { OrderId = 2, ProductId = 2, Quantity = 2 }, new OrderLine { OrderId = 2, ProductId = 3, Quantity = 1 } } },
+                new Order { Id = 3, Status = "transit", OrderLines = new List<OrderLine> { new OrderLine { OrderId = 3, ProductId = 2, Quantity = 4 }, new OrderLine { OrderId = 3, ProductId = 1, Quantity = 2 } } },
+                new Order { Id = 4, Status = "transit", OrderLines = new List<OrderLine> { new OrderLine { OrderId = 4, ProductId = 3, Quantity = 1 } } }
             };
         }
 

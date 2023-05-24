@@ -2,6 +2,6 @@
 {
     public interface IMessagePublisher
     {
-        void PublishOrder(int id, string topic);
+        void OrderStatusChanged(string topic);
     }
 }

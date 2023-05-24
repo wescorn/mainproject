@@ -13,11 +13,11 @@ async function messageListener() {
         //await channel.assertExchange(exchange, 'direct');
 
         // Declare a queue
-        const queue = 'OrderPrintQueue'; 
+        const queue = 'OrderStatusChangedQueue'; 
         await channel.assertQueue(queue);
 
         // Bind the queue to the exchange with a routing key
-        const routingKey = 'myRoutingKey'; // TODO Routing key
+        const routingKey = 'changed'; 
         await channel.bindQueue(queue, exchange, routingKey);
 
         // TODO Fix Queue and Exchange based on what we want too do and then include the functionality for what it's listening for
