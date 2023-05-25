@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
+using Orders.Infrastructure;
 using Orders.Models;
 
 namespace Orders.Data
@@ -42,14 +43,19 @@ namespace Orders.Data
             db.SaveChanges();
         }
 
-        public OrderDto OrderStatusChange(OrderDto order)
+        public void OrderStatusChange(OrderDto order)
         {
             var idParam = new MySqlParameter("@id", order.Id);
             var statusParam = new MySqlParameter("@status", order.Status);
 
-            db.Database.ExecuteSqlRaw("CALL OrderStatusChange(@id, @status)", idParam, statusParam);
+            int rowsAffected = db.Database.ExecuteSqlRaw("CALL OrderStatusChange(@id, @status)", idParam, statusParam);
 
-            return null;
+            if (rowsAffected > 0 && order.Status == "delivered")
+            {
+                var messsagePublisher = new MessagePublisher();
+
+                messsagePublisher.OrderStatusChanged(order);
+            }
         }
     }
 }

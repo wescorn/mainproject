@@ -4,6 +4,6 @@ namespace Orders.Data
 {
     public interface IOrderRepository : IRepository<Order>
     {
-        public OrderDto OrderStatusChange(OrderDto order);
+        public void OrderStatusChange(OrderDto order);
     }
 }

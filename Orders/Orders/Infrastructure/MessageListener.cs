@@ -15,7 +15,6 @@ namespace Orders.Infrastructure
     {
         IServiceProvider provider;
 
-
         public MessageListener(IServiceProvider provider)
         {
             this.provider = provider;
@@ -74,7 +73,11 @@ namespace Orders.Infrastructure
                     }
                     else if (ea.RoutingKey == "changed")
                     {
-                        // Code for handling messages with "changed" routing key
+                        var body = ea.Body.ToArray();
+                        var message = Encoding.UTF8.GetString(body);
+                        var json = JsonConvert.DeserializeObject<OrderDto>(message);
+
+                        provider.GetService<IOrderRepository>().OrderStatusChange(json);
                     }
                     else
                     {
