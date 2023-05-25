@@ -42,27 +42,43 @@ namespace Orders.Infrastructure
                      arguments: null
                 );
 
+                channel.QueueDeclare(queue: "OrderStatusChangedQueue",
+                     durable: true,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null
+                );
+
                 channel.BasicQos(0, 1, false);
 
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {
-
-                    //OpenTelemetry.Context.Propagation.TextMapPropagator Propagator = new TraceContextPropagator();
-                    
-
-                    string traceId = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["x-b3-traceid"]);
-                    string spanId = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["x-b3-spanid"]);
-                    var parentContext = new ActivityContext(ActivityTraceId.CreateFromString(traceId), ActivitySpanId.CreateFromString(spanId), ActivityTraceFlags.Recorded, "", true);
-                    using (var activity1 = Monitoring.ActivitySource.StartActivity("Received PDF Gen request in C# (MachineName: "+System.Environment.MachineName+")", ActivityKind.Consumer, parentContext)) {
-                        Log.Logger.Information("Received a PDF Generate message, and just started a new Span!(Machine: {Machine})", System.Environment.MachineName);
-                        using (var activity2 = Monitoring.ActivitySource.StartActivity("Generating PDF!", ActivityKind.Consumer)) {
-                            Log.Logger.Information("About to process the message and generate the PDF! (Machine: {Machine})", System.Environment.MachineName);
-                            var body = ea.Body.ToArray();
-                            var message = Encoding.UTF8.GetString(body);
-                            var json = JsonConvert.DeserializeObject<GetOrderMessage>(message);
-                            HandleOrderPdfs(json);
+                    if (ea.RoutingKey == "generate")
+                    {
+                        string traceId = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["x-b3-traceid"]);
+                        string spanId = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["x-b3-spanid"]);
+                        var parentContext = new ActivityContext(ActivityTraceId.CreateFromString(traceId), ActivitySpanId.CreateFromString(spanId), ActivityTraceFlags.Recorded, "", true);
+                        using (var activity1 = Monitoring.ActivitySource.StartActivity("Received PDF Gen request in C# (MachineName: " + System.Environment.MachineName + ")", ActivityKind.Consumer, parentContext))
+                        {
+                            Log.Logger.Information("Received a PDF Generate message, and just started a new Span!(Machine: {Machine})", System.Environment.MachineName);
+                            using (var activity2 = Monitoring.ActivitySource.StartActivity("Generating PDF!", ActivityKind.Consumer))
+                            {
+                                Log.Logger.Information("About to process the message and generate the PDF! (Machine: {Machine})", System.Environment.MachineName);
+                                var body = ea.Body.ToArray();
+                                var message = Encoding.UTF8.GetString(body);
+                                var json = JsonConvert.DeserializeObject<GetOrderMessage>(message);
+                                HandleOrderPdfs(json);
+                            }
                         }
+                    }
+                    else if (ea.RoutingKey == "changed")
+                    {
+                        // Code for handling messages with "changed" routing key
+                    }
+                    else
+                    {
+                        // Code for handling other routing keys
                     }
 
                     channel.BasicAck(ea.DeliveryTag, false);
@@ -70,9 +86,16 @@ namespace Orders.Infrastructure
                 channel.BasicConsume(queue: "OrderPrintQueue",
                                      autoAck: false,
                                      consumer: consumer);
+                channel.BasicConsume(queue: "OrderStatusChangedQueue",
+                                     autoAck: false,
+                                     consumer: consumer);
+
                 channel.QueueBind(queue: "OrderPrintQueue",
                 exchange: "OrderExchange",
                 routingKey: "generate");
+                channel.QueueBind(queue: "OrderStatusChangedQueue",
+                exchange: "OrderExchange",
+                routingKey: "changed");
 
                 // Block the thread so that it will not exit and stop subscribing.
                 lock (this)
