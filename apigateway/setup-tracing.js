@@ -7,7 +7,7 @@ const api = require('@opentelemetry/api')
 const { GetUrl } = require('./serviceurls');
 const { AsyncHooksContextManager } = require('@opentelemetry/context-async-hooks');
 
-const setupTracing = (app, routes) => {
+const setupTracing = () => {
 
     const resource = Resource.default().merge(
       new Resource({
@@ -22,6 +22,7 @@ const setupTracing = (app, routes) => {
     const consoleExporter = new ConsoleSpanExporter();
     const spanProcessor = new SimpleSpanProcessor(consoleExporter);
     provider.addSpanProcessor(spanProcessor);
+    console.log('ZIPKIN URL', `http://${GetUrl('zipkin')}/api/v2/spans`);
     const zipkinExporter = new ZipkinExporter({
       url: `http://${GetUrl('zipkin')}/api/v2/spans`,
       serviceName: 'APIGateway'

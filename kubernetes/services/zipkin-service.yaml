@@ -6,6 +6,11 @@ metadata:
     app: zipkin
 spec:
   ports:
-    - port: 9411
+    - name: main
+      port: 80
+      targetPort: 9411
+    - name: extra
+      port: 9411
+      targetPort: 9411
   selector:
     app: zipkin

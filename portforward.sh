@@ -29,7 +29,7 @@ kubectl port-forward service/versiontwo-nginx 8000:80 &
 PF7_PID=$!
 
 echo "Port Forwarding zipkin: http://localhost:9411/"
-kubectl port-forward service/zipkin 9411:9411 &
+kubectl port-forward service/zipkin 9411:80 &
 PF8_PID=$!
 
 echo "Port Forwarding products: http://localhost:3000/"
