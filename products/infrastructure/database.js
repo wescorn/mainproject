@@ -14,4 +14,23 @@ function initialize() {
   exec("npm run seed")
 }
 
-module.exports = {initialize};
+function adjustProductStock(orderDto) {
+  const connection = mysql.createConnection({
+    host: "mysqldb",
+    user: 'root',
+    password: 'admin',
+  });
+
+  if(orderDto.Status == "delivered"){
+    orderDto.OrderLines.forEach((orderLine) => {
+      connection.query('CALL AdjustProductStock(?, ?)', {
+        replacements: [orderLine.ProductId, orderLine.Quantity],
+      });
+    });
+  }
+}
+
+module.exports = {
+  initialize,
+  adjustProductStock
+};

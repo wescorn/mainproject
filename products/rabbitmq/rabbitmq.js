@@ -1,4 +1,5 @@
 const amqp = require('amqplib');
+const database = require('../infrastructure/database')
 
 async function messageListener() {
     try {
@@ -24,11 +25,14 @@ async function messageListener() {
     
         // Consume messages from the queue
         channel.consume(queue, (message) => {
-          console.log('Received message:', message.content.toString());
-          // Process the received message
-    
-          // Acknowledge the message
-          channel.ack(message);
+            const payload = message.content.toString();
+            const orderDto = JSON.parse(payload);
+            
+            // Process the received message
+            database.adjustProductStock(orderDto);
+
+            // Acknowledge the message
+            channel.ack(message);
         });
     
         console.log('Listening to RabbitMQ');
