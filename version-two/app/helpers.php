@@ -97,10 +97,9 @@ if (!function_exists('guzzle')) {
     $stack->unshift(GuzzleHttp\Middleware::mapRequest(function (Psr\Http\Message\RequestInterface $request) {
         $context = \Vinelab\Tracing\Facades\Trace::getCurrentSpan()->getContext()->getRawContext();
         $request = $request->withHeader(
-          'X-B3-ParentSpanId', $context->getParentId())->withHeader(
-          'X-B3-SpanId', $context->getSpanId())->withHeader(
-          'X-B3-TraceId', $context->getTraceId())->withHeader(
-          'X-B3-Sampled', $context->isSampled() ? 1 : 0);
+          'SpanId', $context->getSpanId())->withHeader(
+          'TraceId', $context->getTraceId())->withHeader(
+          'Sampled', $context->isSampled() ? 1 : 0);
         return $request;
     }));
 

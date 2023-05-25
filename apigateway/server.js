@@ -11,7 +11,7 @@ const app = express()
 const PORT = 3400;
 const HOST = '0.0.0.0';
 
-setupTracing(app, ROUTES);
+setupTracing();
 setupRouteTracing(app, ROUTES);
 setupCallbacks(app, ROUTES);
 setupRateLimit(app, ROUTES);
