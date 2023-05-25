@@ -4,7 +4,7 @@ const config = require('./config');
 const rabbitmq = require('./rabbitmq/rabbitmq')
 const database = require('./infrastructure/database')
 const app = express();
-
+const { SetupSwagger } = require('./middleware/swagger');
 const testRoute = require('./routes/testRoute');
 const userRoute = require('./routes/userRoute');
 const productRoute = require('./routes/productRoute');
@@ -17,10 +17,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.urlencoded());
 
 
-app.use('/test', accessLog, testRoute);
-app.use('/user', accessLog, userRoute);
-app.use('/product', accessLog, productRoute);
- 
+app.use('/tests', accessLog, testRoute);
+app.use('/users', accessLog, userRoute);
+app.use('/products', accessLog, productRoute);
+SetupSwagger(app);
+
 database.initialize();
 
 rabbitmq.messageListener().catch((error) => {
