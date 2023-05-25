@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using Orders.Models;
 
 namespace Orders.Data
@@ -39,6 +40,16 @@ namespace Orders.Data
             var order = db.Orders.FirstOrDefault(p => p.Id == id);
             db.Orders.Remove(order);
             db.SaveChanges();
+        }
+
+        public OrderDto OrderStatusChange(OrderDto order)
+        {
+            var idParam = new MySqlParameter("@id", order.Id);
+            var statusParam = new MySqlParameter("@status", order.Status);
+
+            db.Database.ExecuteSqlRaw("CALL OrderStatusChange(@id, @status)", idParam, statusParam);
+
+            return null;
         }
     }
 }

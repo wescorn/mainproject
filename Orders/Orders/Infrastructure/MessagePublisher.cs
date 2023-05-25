@@ -1,4 +1,6 @@
-﻿using RabbitMQ.Client;
+﻿using Newtonsoft.Json;
+using Orders.Models;
+using RabbitMQ.Client;
 using System.Text;
 
 namespace Orders.Infrastructure
@@ -12,7 +14,7 @@ namespace Orders.Infrastructure
         /*
          * Publish Order Status Changed to change product stocks
          */
-        public void OrderStatusChanged(string topic)
+        public void OrderStatusChanged(OrderDto order)
         {
             //Main entry point to the RabbitMQ .NET AMQP client
             var connectionFactory = new ConnectionFactory()
@@ -25,7 +27,8 @@ namespace Orders.Infrastructure
             var model = connection.CreateModel();
             var properties = model.CreateBasicProperties();
             properties.Persistent = false;
-            byte[] messagebuffer = Encoding.Default.GetBytes(topic);
+            var json = JsonConvert.SerializeObject(order);
+            byte[] messagebuffer = Encoding.UTF8.GetBytes(json);
             model.BasicPublish("OrderExchange", "changed", properties, messagebuffer);
         }
     }

@@ -1,7 +1,9 @@
-﻿namespace Orders.Infrastructure
+﻿using Orders.Models;
+
+namespace Orders.Infrastructure
 {
     public interface IMessagePublisher
     {
-        void OrderStatusChanged(string topic);
+        void OrderStatusChanged(OrderDto order);
     }
 }
