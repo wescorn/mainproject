@@ -29,7 +29,7 @@ namespace Orders.Infrastructure
             properties.Persistent = false;
             var json = JsonConvert.SerializeObject(order);
             byte[] messagebuffer = Encoding.UTF8.GetBytes(json);
-            model.BasicPublish("OrderExchange", "changed", properties, messagebuffer);
+            model.BasicPublish("OrderExchange", "adjust", properties, messagebuffer);
         }
     }
 }
