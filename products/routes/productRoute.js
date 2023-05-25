@@ -27,7 +27,6 @@ const productController = require('../controller/product');
 *           type: integer
 *           description: The current stock of the product
 *       example:
-*         id: 50
 *         name: Duct tape
 *         price: 70
 *         stock: 22
