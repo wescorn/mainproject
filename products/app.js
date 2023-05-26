@@ -8,9 +8,13 @@ const { SetupSwagger } = require('./middleware/swagger');
 const testRoute = require('./routes/testRoute');
 const userRoute = require('./routes/userRoute');
 const productRoute = require('./routes/productRoute');
+const {setupTracing} = require("./middleware/setup-tracing");
+const {setupRouteTracing} = require("./middleware/setup-route-tracing");
 
 const accessLog = require('./middleware/accessLog');
 
+setupTracing();
+setupRouteTracing(app);
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));

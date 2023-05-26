@@ -1,23 +1,21 @@
 const db = require("../models");
 const Product = db.Product;
 const Op = db.Sequelize.Op;
+const DTOHelper = require('../helpers/DTOHelper');
 
 
 exports.create = (req, res) => {
-    Product.create({
-        name: req.body.name,
-        price: req.body.price,
-        stock: req.body.stock
+    const dto = DTOHelper.MakeProductDTO(req.body, ['name', 'price', 'stock']);
+    DTOHelper.MakeProduct(dto).save().then(product => {
+        resDto = DTOHelper.MakeProductDTO(product);
+        res.send(resDto);
     })
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the Product."
-            });
+    .catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while creating the Product."
         });
+    });
 };
 
 
@@ -25,8 +23,9 @@ exports.findAll = (req, res) => {
     const name = req.query.name;
     var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
     Product.findAll({ where: condition })
-        .then(data => {
-            res.send(data);
+        .then(products => {
+            products = products.map(product => DTOHelper.MakeProductDTO(product))
+            res.send(products);
         })
         .catch(err => {
             res.status(500).send({
@@ -41,9 +40,9 @@ exports.findOne = (req, res) => {
     const id = req.params.id;
 
     Product.findByPk(id)
-        .then(data => {
-            if (data) {
-                res.send(data);
+        .then(product => {
+            if (product) {
+                res.send(DTOHelper.MakeProductDTO(product));
             } else {
                 res.status(404).send({
                     message: `Cannot find Product with id=${id}.`
@@ -51,6 +50,7 @@ exports.findOne = (req, res) => {
             }
         })
         .catch(err => {
+            console.log(err);
             res.status(500).send({
                 message: "Error retrieving Product with id=" + id
             });
@@ -60,7 +60,7 @@ exports.findOne = (req, res) => {
 
 exports.update = (req, res) => {
     const id = req.params.id;
-
+    
     Product.update(req.body, {
         where: { id: id }
     })

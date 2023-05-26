@@ -7,6 +7,8 @@ const {setupAuth} = require("./auth");
 const {setupCallbacks} = require("./callbacks");
 const {setupTracing} = require("./setup-tracing");
 const {setupRouteTracing} = require("./setup-route-tracing");
+//const {SetupSwagger} = require("./swagger");
+
 const app = express()
 const PORT = 3400;
 const HOST = '0.0.0.0';

@@ -34,9 +34,6 @@ const productController = require('../controller/product');
 
 /**
 * @swagger
-* tags:
-*   name: Product
-*   description: The Product managing API
 * /products:
 *   get:
 *     summary: Lists all the products
@@ -55,9 +52,6 @@ router.get('/', productController.findAll);
 
 /**
 * @swagger
-* tags:
-*   name: Product
-*   description: The Product managing API
 * /products/{id}:
 *   get:
 *     summary: Get the product by id
@@ -83,9 +77,6 @@ router.get('/:id', productController.findOne);
 
 /**
 * @swagger
-* tags:
-*   name: Product
-*   description: The Product managing API
 * /products:
 *   post:
 *     summary: Create a new product
@@ -110,9 +101,6 @@ router.post('/', productController.create),
 
 /**
 * @swagger
-* tags:
-*   name: Product
-*   description: The Product managing API
 * /products/{id}:
 *   put:
 *    summary: Update the product by the id
@@ -146,9 +134,6 @@ router.put('/:id', productController.update);
 
 /**
 * @swagger
-* tags:
-*   name: Product
-*   description: The Product managing API
 * /products/{id}:
 *   delete:
 *     summary: Remove the product by id

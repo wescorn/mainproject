@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models){
       // define association here
     }
+
   };
 
   Product.init({
@@ -20,10 +21,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     price: {
+      defaultValue: 0.0,
       type: DataTypes.FLOAT,
       allowNull: false
     },
     stock: {
+      defaultValue: 0,
       type: DataTypes.NUMBER,
       allowNull: false
     },
