@@ -23,15 +23,15 @@ const simulateShipmentUpdates = async (interval = 15) => {
                         const newStatus = shipment.checkForStatusUpdateFromCarrier();
                         const oldStatus = shipment.status;
                         if (newStatus != oldStatus) {
-                            shipment.update({ status: newStatus }).then(success => {
-                                if (success == 1) {
+                            shipment.update({ status: newStatus }).then(shipment => {
+                                if (shipment.status == newStatus && shipment.status != oldStatus) {
                                     console.log(`succesfully updated shipment(${shipment.id}) status from ${oldStatus} to ${newStatus} !`);
-                                    PublishMessage('OrderExchange', 'shipments', {
+                                    PublishMessage('OrderExchange', 'ShipmentStatusChangedQueue', 'shipment', JSON.stringify({
                                         id: shipment.id,
-                                        orderIds: shipment.getOrders().map(order => order.id),
+                                        orderIds: shipment.getOrders(),
                                         from: oldStatus,
                                         to: newStatus
-                                    });
+                                    }));
                                 }
                             });
                         }

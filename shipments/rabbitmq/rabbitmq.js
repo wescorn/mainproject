@@ -49,9 +49,9 @@ module.exports = {
     }
 
     //Create exchange and queue in case they don't exist
-    channel.assertExchange(exchange, 'topic', { passive: false, durable: true, auto_delete:false });
-    channel.assertQueue(queue, { durable: true, auto_delete:false });
-    channel.bindQueue(queue, exchange, topic);
+    pubChannel.assertExchange(exchange, 'topic', { passive: false, durable: true, auto_delete:false });
+    pubChannel.assertQueue(queue, { durable: true, auto_delete:false });
+    pubChannel.bindQueue(queue, exchange, topic);
     // convert string message in buffer
     const message = Buffer.from(content, "utf-8");
     try {
