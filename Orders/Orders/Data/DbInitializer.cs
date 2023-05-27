@@ -18,12 +18,12 @@ namespace Orders.Data
             List<Order> orders = new List<Order>
             {
                 new Order {
-                    Status = "transit",
+                    Status = "CREATED",
                     OrderLines = new List<OrderLine>{
                         new OrderLine { ProductId = 1, Quantity = 2 } }
                 },
                 new Order {
-                    Status = "transit",
+                    Status = "CREATED",
                     OrderLines = new List<OrderLine>{
                         new OrderLine { ProductId = 2, Quantity = 3 } }
                 }
