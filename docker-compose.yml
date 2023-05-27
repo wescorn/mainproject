@@ -47,6 +47,14 @@ services:
     restart: unless-stopped
     networks:
       - mainnetwork
+  shipments:
+    image: shipments:local
+    build:
+      context: ./shipments
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - mainnetwork
   apigateway:
     image: apigateway:local
     deploy:

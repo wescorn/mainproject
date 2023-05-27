@@ -40,6 +40,10 @@ echo "Port Forwarding apigateway: http://localhost:3400/"
 kubectl port-forward service/apigateway 3400:80 &
 PF10_PID=$!
 
+echo "Port Forwarding shipments: http://localhost:3350/"
+kubectl port-forward service/shipments 3350:80 &
+PF11_PID=$!
+
 # Wait for user input to stop the port forwarding
 read -p "Press any key to stop port forwarding..."
 
@@ -54,3 +58,4 @@ kill $PF7_PID
 kill $PF8_PID
 kill $PF9_PID
 kill $PF10_PID
+kill $PF11_PID

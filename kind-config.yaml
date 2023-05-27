@@ -21,3 +21,5 @@ nodes:
       containerPath: /products
     - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/mainproject/apigateway
       containerPath: /apigateway
+    - hostPath: C:/Users/Hlynur/OneDrive/Documents/GitHub/mainproject/shipments
+      containerPath: /shipments

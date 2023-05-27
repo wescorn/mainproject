@@ -12,6 +12,10 @@ spec:
       name: 'rabbitmq-amqp'
       port: 5672
       targetPort: 5672
+    - protocol: TCP
+      name: 'rabbitmq-amqp-80'
+      port: 80
+      targetPort: 5672
   selector:
     app: rabbitmq
   type: ClusterIP

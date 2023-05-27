@@ -1,16 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('./config');
-const rabbitmq = require('./rabbitmq/rabbitmq')
 const database = require('./infrastructure/database')
 const app = express();
 const { SetupSwagger } = require('./middleware/swagger');
-const testRoute = require('./routes/testRoute');
-const userRoute = require('./routes/userRoute');
-const productRoute = require('./routes/productRoute');
+const shipmentRoute = require('./routes/shipmentRoute');
 const {setupTracing} = require("./middleware/setup-tracing");
 const {setupRouteTracing} = require("./middleware/setup-route-tracing");
-
+const { simulateShipmentUpdates } = require('./rabbitmq/shipmentSimulation');
 const accessLog = require('./middleware/accessLog');
 
 setupTracing();
@@ -20,17 +17,12 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.urlencoded());
 
- 
-app.use('/tests', accessLog, testRoute);
-app.use('/users', accessLog, userRoute);
-app.use('/products', accessLog, productRoute);
+
+app.use('/shipments', accessLog, shipmentRoute);
 SetupSwagger(app);
 
 database.initialize();
-
-rabbitmq.messageListener().catch((error) => {
-  console.error('Error running message listener: ', error)
-});
+simulateShipmentUpdates();
 
 app.listen(config.PORT, () => {
   console.log(`Listening at http://localhost:${config.PORT}`);

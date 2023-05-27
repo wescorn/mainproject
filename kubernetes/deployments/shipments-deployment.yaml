@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipments
+  labels:
+    app: shipments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shipments
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: shipments
+    spec:
+      restartPolicy: Always
+      containers:
+        - image: shipments:local
+          imagePullPolicy: Never
+          name: shipments
+          ports: 
+            - containerPort: 3350
+          volumeMounts:
+            - mountPath: /shipments
+              name: shipments
+          workingDir: /shipments
+      volumes:
+        - name: shipments
+          persistentVolumeClaim:
+            claimName: shipments-pvc
