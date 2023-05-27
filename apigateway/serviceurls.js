@@ -42,7 +42,8 @@ const isRunningInKubernetes = () => {
       zipkin: 'localhost:9411',
       orders: 'localhost:8080',
       versiontwo: 'localhost:8000',
-      products: 'localhost:3000'
+      products: 'localhost:3000',
+      shipments: 'localhost:3350'
     }
     if(isRunningInKubernetes()) {
       console.log('IS RUNNING IN KUBERNETES', key);

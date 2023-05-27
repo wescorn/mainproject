@@ -32,6 +32,21 @@ const ROUTES = [
             logger.info('requested products!')
         }
     },
+    {
+        url: '/shipments',
+        proxy: {
+            target: `http://${GetUrl('shipments')}/`,
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/shipments`]: '',
+            },
+        },
+        callback: (req, res) => {
+            console.log('callback works!');
+            console.log('REQUEST HEADERS',req.headers)
+            logger.info('requested shipments!')
+        }
+    },
 ]
 
 exports.ROUTES = ROUTES;
