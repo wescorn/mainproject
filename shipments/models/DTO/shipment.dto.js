@@ -4,7 +4,7 @@ class ShipmentDTO {
     this.pickupAddress = pickupAddress;
     this.status = status;
     this.id = id;
-    this.tacking = tracking;
+    this.tracking = tracking;
     this.carrierId = carrierId;
     this.orderIds = orderIds;
   }
