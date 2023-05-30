@@ -24,10 +24,10 @@ namespace Orders.Controllers
             //Just for testing
             all_orders = new List<Order>
             {
-                new Order { Id = 1, Status = "transit", OrderLines = new List<OrderLine> { new OrderLine { OrderId = 1, ProductId = 1, Quantity = 2 } } },
-                new Order { Id = 2, Status = "transit", OrderLines = new List<OrderLine> { new OrderLine { OrderId = 2, ProductId = 2, Quantity = 2 }, new OrderLine { OrderId = 2, ProductId = 3, Quantity = 1 } } },
-                new Order { Id = 3, Status = "transit", OrderLines = new List<OrderLine> { new OrderLine { OrderId = 3, ProductId = 2, Quantity = 4 }, new OrderLine { OrderId = 3, ProductId = 1, Quantity = 2 } } },
-                new Order { Id = 4, Status = "transit", OrderLines = new List<OrderLine> { new OrderLine { OrderId = 4, ProductId = 3, Quantity = 1 } } }
+                new Order { id = 1, status = "transit", order_lines = new List<OrderLine> { new OrderLine { order_id = 1, product_id = 1, quantity = 2 } } },
+                new Order { id = 2, status = "transit", order_lines = new List<OrderLine> { new OrderLine { order_id = 2, product_id = 2, quantity = 2 }, new OrderLine { order_id = 2, product_id = 3, quantity = 1 } } },
+                new Order { id = 3, status = "transit", order_lines = new List<OrderLine> { new OrderLine { order_id = 3, product_id = 2, quantity = 4 }, new OrderLine { order_id = 3, product_id = 1, quantity = 2 } } },
+                new Order { id = 4, status = "transit", order_lines = new List<OrderLine> { new OrderLine { order_id = 4, product_id = 3, quantity = 1 } } }
             };
         }
 
@@ -60,7 +60,7 @@ namespace Orders.Controllers
         public Task<ActionResult<OrderDto>> PostOrder(OrderDto orderDto)
         {
             var order = new Order {
-                //Id = orderDto.Id
+                //id = orderDto.id
             };
 
             var newOrder = repository.Add(order);
@@ -68,19 +68,19 @@ namespace Orders.Controllers
             return Task.FromResult<ActionResult<OrderDto>>(
                 new CreatedAtActionResult(nameof(GetOrder), 
                                 "Order", 
-                                new { id = newOrder.Id }, 
+                                new { id = newOrder.id }, 
                                 OrderToDTO(newOrder)));
         }
         
         private static OrderDto OrderToDTO(Order order) => new OrderDto
         {
-            Id = order.Id,
-            OrderLines = order.OrderLines?.Select(ol => new OrderLineDto
+            id = order.id,
+            order_lines = order.order_lines?.Select(ol => new OrderLineDto
             {
                 id = ol.id,
-                OrderId = ol.OrderId,
-                ProductId = ol.ProductId,
-                Quantity = ol.Quantity
+                order_id = ol.order_id,
+                product_id = ol.product_id,
+                quantity = ol.quantity
             }).ToList()
         };
 
@@ -89,7 +89,7 @@ namespace Orders.Controllers
         public IActionResult test2()
         {
             int id = 2;
-            Order order = all_orders.Find(o => o.Id == id) ?? all_orders.First();
+            Order order = all_orders.Find(o => o.id == id) ?? all_orders.First();
             PdfGenerator pdfGenerator = new PdfGenerator();
             pdfGenerator.Generate(order);
             return Json(all_orders);

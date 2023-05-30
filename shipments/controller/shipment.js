@@ -1,5 +1,5 @@
 const db = require("../models");
-const { Shipment, Order } = db;
+const { Shipment, Order, Carrier } = db;
 const Op = db.Sequelize.Op;
 const DTOHelper = require('../helpers/DTOHelper');
 
@@ -7,27 +7,28 @@ const DTOHelper = require('../helpers/DTOHelper');
 exports.create = async (req, res) => {
     try {
         // Extract the required attributes from the request body
-        const { orderIds } = req.body;
-        const dto = DTOHelper.MakeShipmentDTO(req.body, ['deliveryAddress','pickupAddress','status','tracking', 'carrierId']);
+        const { order_ids } = req.body;
+        console.log(req.body);
+        const dto = DTOHelper.MakeShipmentDTO(req.body, ['delivery_address','pickup_address','status','tracking', 'carrier_id']);
         
-        // Find existing orders among the provided orderIds
+        // Find existing orders among the provided order_ids
         const existingOrders = await Order.findAll({
-          where: { id: { [Op.in]: orderIds } },
+          where: { id: { [Op.in]: order_ids } },
         });
     
-        // Extract the existing orderIds
+        // Extract the existing order_ids
         const existingOrderIds = existingOrders.map((order) => order.id);
     
-        // Find the new orderIds that don't exist
-        const newOrderIds = orderIds.filter((orderId) => {
-          return !existingOrderIds.includes(orderId);
+        // Find the new order_ids that don't exist
+        const newOrderIds = order_ids.filter((order_id) => {
+          return !existingOrderIds.includes(order_id);
         });
     
         // Create new orders in a single query
         const createdOrders = [];
         if (newOrderIds.length > 0) {
           const newOrders = await Order.bulkCreate(
-            newOrderIds.map((orderId) => ({ id: orderId }))
+            newOrderIds.map((order_id) => ({ id: order_id }))
           );
           createdOrders.push(...newOrders);
         }
@@ -49,7 +50,7 @@ exports.create = async (req, res) => {
 
 
 exports.findAll = (req, res) => {
-    Shipment.findAll()
+    Shipment.findAll({include: [{ model: Order, as: 'orders', through: {attributes: []} }, { model: Carrier, as: 'carrier' }]})
         .then(shipments => {
             console.log('SHIPMENTS', shipments);
             shipments = shipments.map(shipment => DTOHelper.MakeShipmentDTO(shipment))

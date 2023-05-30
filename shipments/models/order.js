@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models){
       // Order belongs to many Shipments
       this.belongsToMany(models.Shipment, {
-        through: 'ShipmentOrder',
-        foreignKey: 'orderId',
-        otherKey: 'shipmentId',
+        through: 'shipment_order',
+        foreignKey: 'order_id',
+        otherKey: 'shipment_id',
         as: 'shipments',
       });
     }
@@ -29,9 +29,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Order',
+    tableName: 'orders',
     timestamps: true,
     defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ['created_at', 'updated_at'] },
     }
   });
 

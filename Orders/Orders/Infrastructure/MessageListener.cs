@@ -116,7 +116,7 @@ namespace Orders.Infrastructure
                 var services = scope.ServiceProvider;
                 var orderRepos = services.GetService<IRepository<Order>>();
 
-                var order = orderRepos.Get(message.Id);
+                var order = orderRepos.Get(message.id);
 
                 PdfGenerator pdfGenerator = new PdfGenerator();
                 pdfGenerator.Generate(order);

@@ -30,8 +30,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
+    tableName: 'users',
     defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ['created_at', 'updated_at'] },
     }
   });
 

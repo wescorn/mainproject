@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models){
         // Carrier has many Shipments
       this.hasMany(models.Shipment, {
-        foreignKey: 'carrierId',
+        foreignKey: 'carrier_id',
         as: 'shipments',
       });
     }
@@ -26,9 +26,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Carrier',
+    tableName: 'carriers',
     timestamps: true,
     defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ['created_at', 'updated_at'] },
     }
   });
 

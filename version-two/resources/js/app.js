@@ -6,6 +6,7 @@ import { createInertiaApp } from "@inertiajs/inertia-vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { InertiaProgress } from "@inertiajs/progress";
 
+
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
   resolve: (name) =>
@@ -14,11 +15,14 @@ createInertiaApp({
       import.meta.glob("./Pages/**/*.vue")
     ),
   setup({ el, app, props, plugin }) {
-    return createApp({ render: () => h(app, props) })
+    return createApp({ 
+      render: () => h(app, props)
+     })
       .use(plugin)
       .mount(el);
   },
 });
+
 
 
 InertiaProgress.init({

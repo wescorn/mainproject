@@ -13,22 +13,22 @@ const shipmentController = require('../controller/shipment');
 *         id:
 *           type: integer
 *           description: The auto-generated id of the shipment
-*         deliveryAddress:
+*         delivery_address:
 *           type: string
 *           description: The delivery address of the shipment
-*         pickupAddress:
+*         pickup_address:
 *           type: string
 *           description: The pickup address of the shipment
 *         status:
 *           type: string
 *           description: The initial status of the shipment. options -> "CREATED", "IN TRANSIT", "DELIVERED"
 *       example:
-*         deliveryAddress: ReceipientAddressStreet 69, 1050 København
-*         pickupAddress: CompanyAddressStreet 96, 6715 Esbjerg N
+*         delivery_address: ReceipientAddressStreet 69, 1050 København
+*         pickup_address: CompanyAddressStreet 96, 6715 Esbjerg N
 *         tracking: CFAT3D2SA6HJ654DA
 *         status: CREATED
-*         carrierId: 1
-*         orderIds: [1, 5, 7]
+*         carrier_id: 1
+*         order_ids: [1, 5, 7]
 */
 
 

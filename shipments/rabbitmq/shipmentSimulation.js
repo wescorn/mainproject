@@ -30,7 +30,7 @@ const simulateShipmentUpdates = async (interval = 15) => {
                                         console.log(`Published ShipmentStatusChanged message for orders:(${orders.map(order => order.id).join(',')}). Shipment status changed from ${oldStatus} to ${newStatus}`);
                                         PublishMessage('OrderExchange', 'ShipmentStatusChangedQueue', 'shipment', JSON.stringify({
                                             id: shipment.id,
-                                            orderIds: orders.map(order => order.id),
+                                            order_ids: orders.map(order => order.id),
                                             from: oldStatus,
                                             to: newStatus
                                         }));

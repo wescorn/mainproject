@@ -3,48 +3,48 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\ModelDTOs\OrderDTO;
+use App\ModelDTOs\ShipmentDTO;
 use App\Models\Order;
 use App\Models\OrderLine;
+use App\Models\Shipment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Log;
 
-class OrderController extends Controller
+class ShipmentController extends Controller
 {
 
-    private $order_endpoint;
+    private $endpoint;
 
     public function __construct() {
-        $this->order_endpoint = config('app.apigateway')."/orders";
+        $this->endpoint = config('app.apigateway')."/shipments/shipments";
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return array<\App\ModelDTOs\OrderDTO>
+     * @return array<\App\ModelDTOs\ShipmentDTO>
      */
     public function index()
     {
-        Log::channel('seq')->info("Requesting All Orders (Laravel) from {$this->order_endpoint}/Order");
-        $response = guzzle()->get($this->order_endpoint.'/Order');
-        $orders = OrderDTO::fromArray(json_decode($response->getBody(), true));
-        return $orders;
+        Log::channel('seq')->info("Requesting All Shipments (Laravel) from {$this->endpoint}");
+        $response = guzzle()->get($this->endpoint);
+        $shipments = ShipmentDTO::fromArray(json_decode($response->getBody(), true));
+        return $shipments;
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        $response = Http::post($this->order_endpoint, []);
-        $order = $response->body();
-        dd($response);
-        //return response()->json($order, 201);
+        $response = guzzle()->post($this->endpoint, $request->body());
+        //dd($response->getBody());
+        return $response->getBody();
     }
 
     /**
@@ -56,8 +56,8 @@ class OrderController extends Controller
     public function show($id)
     {
         Log::channel('seq')->debug("works in laravel...!");
-        $response = Http::get($this->order_endpoint."/{$id}");
-        $orders = Order::fromArray(json_decode($response->body()));
+        $response = Http::get($this->endpoint."/{$id}");
+        $orders = Shipment::fromArray(json_decode($response->body(), true));
         return response()->json($orders);
     }
 

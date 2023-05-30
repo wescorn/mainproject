@@ -4,20 +4,35 @@
     "password": "admin",
     "database": "shipments",
     "host": "mysqldb",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "quoteIdentifiers":false,
+    "define":{
+      "underscored":true,
+      "freezeTableName":true
+    }
   },
   "test": {
     "username": "root",
     "password": "admin",
     "database": "shipments",
     "host": "mysqldb",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "quoteIdentifiers":false,
+    "define":{
+      "underscored":true,
+      "freezeTableName":true
+    }
   },
   "production": {
     "username": "root",
     "password": "admin",
     "database": "shipments",
     "host": "mysqldb",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "quoteIdentifiers":false,
+    "define":{
+      "underscored":true,
+      "freezeTableName":true
+    }
   }
 }

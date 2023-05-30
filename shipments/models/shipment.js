@@ -10,14 +10,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models){
       this.belongsToMany(models.Order, {
-        through: 'ShipmentOrder',
-        foreignKey: 'shipmentId',
-        otherKey: 'orderId',
+        through: 'shipment_order',
+        foreignKey: 'shipment_id',
+        otherKey: 'order_id',
         as: 'orders',
       });
 
       this.belongsTo(models.Carrier, {
-        foreignKey: 'carrierId',
+        foreignKey: 'carrier_id',
         as: 'carrier',
       });
     }
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Shipment.init({
-    carrierId: {
+    carrier_id: {
       defaultValue:1,
       allowNull: false,
       type: DataTypes.INTEGER,
@@ -40,31 +40,34 @@ module.exports = (sequelize, DataTypes) => {
     tracking: {
       type: DataTypes.STRING
     },
-    deliveryAddress: {
+    delivery_address: {
       type: DataTypes.STRING
     },
-    pickupAddress: {
+    pickup_address: {
       type: DataTypes.STRING
     },
     status: {
       type: DataTypes.ENUM('CREATED', 'IN TRANSIT', 'DELIVERED'),
       allowNull: false
     },
-    createdAt: {
+    created_at: {
       allowNull: false,
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      defaultValue: Date.now()
     },
-    updatedAt: {
+    updated_at: {
       allowNull: false,
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      defaultValue: Date.now()
     }
     // Add more fields as per your product model requirements
   }, {
     sequelize,
     modelName: 'Shipment',
+    tableName: 'shipments',
     timestamps: true,
     defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ['created_at', 'updated_at'] },
     }
   });
 

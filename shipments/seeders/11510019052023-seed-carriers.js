@@ -2,7 +2,7 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
       // Seed the products table
-      return queryInterface.bulkInsert('Carriers', [
+      return queryInterface.bulkInsert('carriers', [
         {
           id:1,
           name: 'DHL',
@@ -20,6 +20,6 @@ module.exports = {
   
     down: async (queryInterface, Sequelize) => {
       // Remove seeded data from the products table
-      return queryInterface.bulkDelete('Carriers', null, {});
+      return queryInterface.bulkDelete('carriers', null, {});
     }
   };

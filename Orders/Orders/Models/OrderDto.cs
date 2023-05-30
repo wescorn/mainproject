@@ -5,16 +5,16 @@ namespace Orders.Models
 {
     public class OrderDto
     {
-        public int Id { get; set; }
-        public string Status { get; set; }
-        public List<OrderLineDto>? OrderLines { get; set; }
+        public int id { get; set; }
+        public string status { get; set; }
+        public List<OrderLineDto>? order_lines { get; set; }
     }
 
     public class OrderLineDto
     {
         public int id { get; set; }
-        public int OrderId { get; set; }
-        public int ProductId { get; set; }
-        public int Quantity { get; set; }
+        public int order_id { get; set; }
+        public int product_id { get; set; }
+        public int quantity { get; set; }
     }
 }

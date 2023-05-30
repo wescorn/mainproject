@@ -20,10 +20,16 @@ class OrderController extends Controller
 {
     public $endpoint;
 
+   
 
     public function __construct() {
         $this->endpoint = config('app.apigateway')."/orders";
     }
+
+    public function index() {
+        $user = new User();
+        return InertiaTable::index($user, ['id', 'name', 'email', 'deleted_at']);
+    }    
 
     public function getOrders(){
         $m_endpoint = "{$this->endpoint}/Order";

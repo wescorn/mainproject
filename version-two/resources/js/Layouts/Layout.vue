@@ -2,16 +2,16 @@
 import { Link } from '@inertiajs/inertia-vue3'
 const navigation = [
   { name: 'Home', href: '/', pageName: 'Index' },
+  { name: 'Orders (Eloquent)', href: '/orders', pageName: 'Order' },
+  { name: 'Orders (Microservices)', href: '/orders_m', pageName: 'Order' },
   { name: 'Login', href: '/login', pageName: 'Login' },
-  { name: 'About', href: '/', pageName: 'About' },
-  { name: 'Contact Us', href: '/', pageName: 'ContactUs' },
 ]
 
 </script>
 
 <template>
   <div>
-    <div class="dark:bg-gray-900 border-b">
+    <div class="dark:bg-gray-900 border-b z-10" >
       <nav class="container px-6 py-8 mx-auto md:flex md:justify-between md:items-center">
         <div class="flex items-center justify-between">
           <Link class="text-xl font-bold text-white md:text-2xl hover:text-blue-400"  href="/"> Logo </Link>
@@ -32,14 +32,12 @@ const navigation = [
         </ul>
       </nav>
     </div>
-    <main>
-      <section class="absolute w-full h-full">
-        <div class="absolute top-0 w-full h-full bg-gray-900"
-          style="background-size: 100%; background-repeat: no-repeat; z-index: -1;"></div>
+    <main class="relative">
+      <section class="absolute inset-0 bg-gray-900" style="background-size: 100%; background-repeat: no-repeat; z-index: -1;"></section>
+      <div class="min-h-screen">
         <slot />
-      </section>
+      </div>
     </main>
-
   </div>
 </template>
 

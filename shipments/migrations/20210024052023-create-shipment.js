@@ -2,18 +2,18 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Shipments', {
+    await queryInterface.createTable('shipments', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      carrierId: {
+      carrier_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-         model: "Carriers",
+         model: "carriers",
          key: "id"
         },
         onUpdate: 'CASCADE',
@@ -23,10 +23,10 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
-      deliveryAddress: {
+      delivery_address: {
         type: Sequelize.STRING
       },
-      pickupAddress: {
+      pickup_address: {
         type: Sequelize.STRING
       },
       status: {
@@ -34,12 +34,12 @@ module.exports = {
         type: Sequelize.ENUM('CREATED', 'IN TRANSIT', 'DELIVERED'),
         allowNull: false
       },
-      createdAt: {
+      created_at: {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
         type: Sequelize.DATE
@@ -47,6 +47,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Shipments');
+    await queryInterface.dropTable('shipments');
   }
 };

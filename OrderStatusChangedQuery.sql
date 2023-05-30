@@ -6,6 +6,6 @@ CREATE PROCEDURE OrderStatusChange(
 BEGIN
     UPDATE Orders
     SET Orders.`Status` = status
-    WHERE Orders.Id = id;
+    WHERE Orders.id = id;
 END$$
 DELIMITER ;OrderStatusChange

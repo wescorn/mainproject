@@ -8,20 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class OrderLine extends Model
 {
     use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'id',
         'order_id',
         'product_id',
-        'quantity',
+        'quantity'
     ];
 
-    public function order(){
+    public function order()
+    {
         return $this->belongsTo(Order::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }

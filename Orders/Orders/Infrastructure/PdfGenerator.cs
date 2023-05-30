@@ -19,18 +19,18 @@ namespace Orders.Infrastructure
         public void Generate(Order order)
         {
             // Create a new PDF document
-            PdfDocument pdf = new PdfDocument(new PdfWriter("/orders/pdfs/order_"+order.Id+".pdf"));
+            PdfDocument pdf = new PdfDocument(new PdfWriter("/orders/pdfs/order_"+order.id+".pdf"));
             Document document = new Document(pdf);
 
             // Add some content to the PDF
-            Paragraph heading = new Paragraph("Order ID: "+ (order.Id));
-            Paragraph status = new Paragraph("Order Status: " + (order.Status));
+            Paragraph heading = new Paragraph("Order ID: "+ (order.id));
+            Paragraph status = new Paragraph("Order Status: " + (order.status));
             document.Add(heading);
             document.Add(status);
 
-            foreach (OrderLine orderline in order.OrderLines)
+            foreach (OrderLine orderline in order.order_lines)
             {
-                Paragraph p = new Paragraph("Product: " + orderline.ProductId + "\t"+"Quantity: "+orderline.Quantity);
+                Paragraph p = new Paragraph("Product: " + orderline.product_id + "\t"+"Quantity: "+orderline.quantity);
                 document.Add(p);
             }
 

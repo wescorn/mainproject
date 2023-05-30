@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DevController;
 use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
@@ -16,29 +17,30 @@ use App\Models\User;
 |
 */
 
-//Route::get('/', [HomeController::class, 'show']);
+Route::redirect('/', '/orders');
 
 Route::get('/orders/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');
 //TODO Make function to print pdf
-Route::get('/', function () {
+Route::get('/test', [DevController::class, 'test'])->name('test');
+
+Route::get('/orders', function () {
+    return Inertia::render('Order', [
+        'orders' => Order::with(['orderLines.product', 'shipments.carrier'])->take(100)->get(),
+    ]);
+})->name('orders');
+
+Route::get('/orders_m', function () {
     $orders = (new \App\Http\Controllers\API\OrderController())->index();
-    return Inertia::render('Index', [
+    return Inertia::render('Order', [
         'orders' => $orders
     ]);
-})->name('home');
+})->name('orders_m');
 
 Route::get('/login', function () {
     return Inertia::render('Login');
 })->name('login');
 
-Route::get('/test', function () {
 
-    return Inertia::render('Test', [
-        'laravel' => \Illuminate\Foundation\Application::VERSION,
-        'php' => PHP_VERSION,
-    ]);
-
-});
 
 
 Route::post('/print', [OrderController::class, 'printOrder'])->name('orders.printOrder');

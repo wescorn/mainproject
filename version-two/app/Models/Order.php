@@ -9,15 +9,20 @@ use Illuminate\Support\Arr;
 class Order extends Model
 {
     use HasFactory;
-
-     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'id',
+        'status'
     ];
+
+    public function orderLines()
+    {
+        return $this->hasMany(OrderLine::class);
+    }
+
+    public function shipments()
+    {
+        return $this->belongsToMany(Shipment::class, 'shipment_order');
+    }
 
     public static function fromArray($array) {
         if($array !== null) {
@@ -43,7 +48,4 @@ class Order extends Model
         return $order;
     }
 
-    public function orderLines(){
-        return $this->hasMany(OrderLine::class);
-    }
 }

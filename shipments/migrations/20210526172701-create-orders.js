@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Orders', {
+    await queryInterface.createTable('orders', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -13,45 +13,45 @@ module.exports = {
       //  allowNull: false,
       //  unique: true,
       //},
-      createdAt: {
+      created_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
-      updatedAt: {
+      updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
     });
 
-    await queryInterface.createTable('ShipmentOrder', {
-      orderId: {
+    await queryInterface.createTable('shipment_order', {
+      order_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Orders',
+          model: 'orders',
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      shipmentId: {
+      shipment_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Shipments',
+          model: 'shipments',
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      createdAt: {
+      created_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
-      updatedAt: {
+      updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
@@ -59,7 +59,7 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('ShipmentOrder');
-    await queryInterface.dropTable('Orders');
+    await queryInterface.dropTable('shipment_order');
+    await queryInterface.dropTable('orders');
   },
 };
