@@ -15,7 +15,7 @@ class ShipmentDTO extends BaseDTO
     public array $order_ids;
     public array $orders;
 
-    public function __construct($id = null, $carrier_id = null, $delivery_address = null, $pickup_address = null, $status = null, $order_ids = null, $orders = null, $carrier = null)
+    public function __construct($id = null, $carrier_id = null, $delivery_address = null, $pickup_address = null, $status = null, $order_ids = [], $orders = null, $carrier = null)
     {
         $this->id = $id;
         $this->carrier_id = $carrier_id;
@@ -30,6 +30,6 @@ class ShipmentDTO extends BaseDTO
 
     protected static function MakeFromArray(array $array, array $options = []) : static
     {
-        return new \App\ModelDTOs\ShipmentDTO(Arr::get($array, 'id'), Arr::get($array, 'carrier_id'), Arr::get($array, 'delivery_address'), Arr::get($array, 'pickup_address'), Arr::get($array, 'status'), Arr::get($array, 'order_ids'), Arr::get($array, 'orders'), Arr::get($array, 'carrier'));
+        return new \App\ModelDTOs\ShipmentDTO(Arr::get($array, 'id'), Arr::get($array, 'carrier_id'), Arr::get($array, 'delivery_address'), Arr::get($array, 'pickup_address'), Arr::get($array, 'status'), Arr::get($array, 'order_ids', []), Arr::get($array, 'orders'), Arr::get($array, 'carrier'));
     }
 }

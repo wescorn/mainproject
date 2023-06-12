@@ -30,6 +30,11 @@ spec:
             - mountPath: /var/www
               name: versiontwo-www
           workingDir: /var/www/
+          resources:
+            limits:
+              cpu: 0.5 #limits the CPU per pod to half a cpu-core.
+            requests:
+              cpu: 0.3
       volumes:
         - name: versiontwo-www
           persistentVolumeClaim:

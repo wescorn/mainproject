@@ -25,10 +25,6 @@ abstract class BaseDTO
         throw new InvalidArgumentException('input $array cannot be null');
     }
 
-    public function toArray() {
-        return object_to_array($this);
-    }
-
     /**
      * Create an instance of this class from an array.
      *

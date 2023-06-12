@@ -6,14 +6,15 @@
   },
   "scripts": {
     "deploy": "node -e \"const path = require('path').resolve('.'); console.log('PROJECT_FILES_PATH:', path);\" && (set PROJECT_FILES_PATH=%cd% || export PROJECT_FILES_PATH=$(pwd)) && npm run start-cluster",
-    "start-cluster": "kind delete cluster --name maincluster && kind create cluster --name maincluster --config kind-config.yaml && kind load docker-image versiontwo:local --name maincluster && kind load docker-image orders:local --name maincluster && kind load docker-image apigateway:local --name maincluster && kind load docker-image products:local --name maincluster && kind load docker-image shipments:local --name maincluster && kubectl apply -f ./kubernetes --recursive",
+    "start-cluster": "kind delete cluster --name maincluster && kind create cluster --name maincluster --config kind-config.yaml && kind load docker-image versiontwo:local --name maincluster && kind load docker-image orders:local --name maincluster && kind load docker-image apigateway:local --name maincluster && kind load docker-image products:local --name maincluster && kind load docker-image shipments:local --name maincluster && npm run kubernetes",
     "portforward": "./portforward.sh",
-    "kubernetes": "kubectl apply -f ./kubernetes --recursive",
+    "kubernetes": "npm run metrics-server && kubectl apply -f ./kubernetes --recursive",
     "apply-orders": "docker-compose build orders && kubectl delete deployments orders && kind load docker-image orders:local --name maincluster && kubectl apply -f ./kubernetes --recursive",
     "apply-apigateway": "docker-compose build apigateway && kubectl delete deployments apigateway && kind load docker-image apigateway:local --name maincluster && kubectl apply -f ./kubernetes --recursive",
     "apply-products" : "docker-compose build products && kubectl delete deployments products && kind load docker-image products:local --name maincluster && kubectl apply -f ./kubernetes --recursive",
     "apply-shipments" : "docker-compose build shipments && kubectl delete deployments shipments && kind load docker-image shipments:local --name maincluster && kubectl apply -f ./kubernetes --recursive",
     "showlog" : "node ./scripts/showlog.js",
-    "shell" : "node ./scripts/access_shell.js"
+    "shell" : "node ./scripts/access_shell.js",
+    "metrics-server":"kubectl apply -f ./kubernetes/other/components.yaml && kubectl patch deployment metrics-server -n kube-system --patch \"$(cat ./kubernetes/other/metric-server-patch.yaml)\""
   }  
 }

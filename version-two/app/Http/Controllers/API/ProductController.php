@@ -42,7 +42,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $response = guzzle()->post($this->endpoint, $request->body());
-        dd($response->getBody());
+        //dd($response->getBody());
         return $response->getBody();
     }
 

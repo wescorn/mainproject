@@ -57,7 +57,9 @@ namespace Orders.Infrastructure
                     {
                         string traceId = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["x-b3-traceid"]);
                         string spanId = Encoding.UTF8.GetString((byte[])ea.BasicProperties.Headers["x-b3-spanid"]);
+                        
                         var parentContext = new ActivityContext(ActivityTraceId.CreateFromString(traceId), ActivitySpanId.CreateFromString(spanId), ActivityTraceFlags.Recorded, "", true);
+
                         using (var activity1 = Monitoring.ActivitySource.StartActivity("Received PDF Gen request in C# (MachineName: " + System.Environment.MachineName + ")", ActivityKind.Consumer, parentContext))
                         {
                             Log.Logger.Information("Received a PDF Generate message, and just started a new Span!(Machine: {Machine})", System.Environment.MachineName);

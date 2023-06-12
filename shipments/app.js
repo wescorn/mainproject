@@ -22,7 +22,7 @@ app.use('/shipments', accessLog, shipmentRoute);
 SetupSwagger(app);
 
 database.initialize();
-simulateShipmentUpdates();
+//simulateShipmentUpdates();
 
 app.listen(config.PORT, () => {
   console.log(`Listening at http://localhost:${config.PORT}`);

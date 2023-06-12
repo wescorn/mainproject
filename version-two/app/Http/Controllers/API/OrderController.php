@@ -43,7 +43,7 @@ class OrderController extends Controller
     {
         $response = Http::post($this->order_endpoint, []);
         $order = $response->body();
-        dd($response);
+        //dd($response);
         //return response()->json($order, 201);
     }
 

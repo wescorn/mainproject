@@ -6,9 +6,9 @@ class ShipmentDTO {
     this.id = id;
     this.tracking = tracking;
     this.carrier_id = carrier_id;
+    this.carrier = carrier;
     this.order_ids = order_ids;
     this.orders = orders;
-    this.carrier = carrier;
   }
 }
 

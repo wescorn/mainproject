@@ -20,9 +20,11 @@ class OrderDTO extends BaseDTO
 
     protected static function MakeFromArray(array $array, array $options = []) : static
     {
-        return new \App\ModelDTOs\OrderDTO(Arr::get($array, 'id'), Arr::get($array, 'status'), OrderLineDTO::fromArray(Arr::get($array, 'order_lines')), Arr::get($array, 'shipments', []));
+        return new \App\ModelDTOs\OrderDTO(
+            Arr::get($array, 'id'),
+            Arr::get($array, 'status'),
+            OrderLineDTO::fromArray(Arr::get($array, 'order_lines')), 
+            ShipmentDTO::fromArray(Arr::get($array, 'shipments'))
+        );
     }
-
-
-
 }

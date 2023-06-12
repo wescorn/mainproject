@@ -20,8 +20,6 @@ async function messageListener() {
         // Bind the queue to the exchange with a routing key
         const routingKey = 'adjust'; 
         await channel.bindQueue(queue, exchange, routingKey);
-
-        // TODO Fix Queue and Exchange based on what we want too do and then include the functionality for what it's listening for
     
         // Consume messages from the queue
         channel.consume(queue, (message) => {
